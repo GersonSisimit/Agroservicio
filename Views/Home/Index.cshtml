@@ -1,10 +1,133 @@
-﻿<section class="content">
+﻿
 
-    <!-- Default box -->
-    <div class="row">
-        <h1>mmm</h1>
-        <!-- /.card-body -->
-    </div>
-    <!-- /.card -->
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <h1>
+            @*            <button id="myButton" class="btn btn-primary">Mostrar SweetAlert</button>
+            *@            Punto de Venta e Inventario
+            <small>Agroservicio Cuxil</small>
+        </h1>
+    </section>
 
-</section>
+
+
+    <!-- Main content -->
+    <section class="content">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="box box-success animated slideInRight">
+                    <div class="box-header with-border">
+                        <h3 class="box-title"><i class="fa fa-shopping-cart"></i> Ventas</h3>
+                    </div>
+                    <div class="box-body">
+                        <!-- Contenido relacionado con las ventas -->
+                        <table class="table table-hover">
+                            <tbody>
+                                <tr>
+                                    <td>Vender</td>
+                                    <td class="text-right">
+                                        <a href="@Url.Action("Venta", "Ventas")" class="btn btn-default">
+                                            <i class="fa fa-shopping-cart"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                                <!-- Add other rows here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="box box-info animated slideInRight">
+                    <div class="box-header with-border" style="background-color:#abebc6">
+                        <h3 class="box-title"><i class="fa fa-cubes"></i> Productos</h3>
+                    </div>
+                    <div class="box-body">
+                        <!-- Contenido relacionado con los productos -->
+
+                        <table class="table table-hover">
+                            <tbody>
+                                <tr>
+                                    <td>Buscar productos</td>
+                                    <td class="text-right">
+                                        <a href="@Url.Action("BuscarProductos", "Productos")" class="btn btn-default">
+                                            <i class="fa fa-shopping-bag" aria-hidden="true"></i>
+                                        </a>
+                                    </td>
+
+                                </tr>
+                                <tr>
+                                    <td>Crear Producto</td>
+                                    <td class="text-right">
+                                        <a href="@Url.Action("CrearProducto", "Productos")" class="btn btn-default">
+                                            <i class="fa fa-plus" aria-hidden="true"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Gestionar Detalles Productos</td>
+                                    <td class="text-right">
+                                        <a href="@Url.Action("GestionProducto", "Productos")" class="btn btn-default">
+                                            <i class="fa fa-cog" aria-hidden="true"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                                <!-- Add other rows here -->
+                            </tbody>
+                        </table>
+                        <!-- Puedes agregar tus propios elementos y diseño aquí -->
+                        @* <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu">
+                        <li class="nav-item">
+                        <a href="#" class="nav-link active" data-toggle="collapse">
+                        <i class="fa fa-shopping-basket" aria-hidden="true"></i>
+                        <p>
+                        Productos
+                        <i class="right fas fa-angle-left"></i>
+                        </p>
+                        </a>
+                        <ul class="nav nav-treeview collapse">
+                        <li class="nav-item">
+                        <a href="@Url.Action("BuscarProductos", "Productos")" class="nav-link">
+                        <i class="fa fa-shopping-bag" aria-hidden="true"></i>
+                        <p>Buscar productos</p>
+                        </a>
+                        </li>
+                        <li class="nav-item">
+                        <a href="@Url.Action("CrearProducto", "Productos")" class="nav-link">
+                        <i class="fa fa-plus" aria-hidden="true"></i>
+                        <p>Crear Producto</p>
+                        </a>
+                        </li>
+                        <li class="nav-item">
+                        <a href="@Url.Action("GestionProducto", "Productos")" class="nav-link">
+                        <i class="fa fa-cog" aria-hidden="true"></i>
+                        Gestionar Detalles Productos
+                        </a>
+                        </li>
+                        </ul>
+                        </li>
+                        </ul> *@
+
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="box box-warning animated slideInRight">
+                    <div class="box-header with-border">
+                        <h3 class="box-title"><i class="fa fa-database"></i> Inventario</h3>
+                    </div>
+                    <div class="box-body">
+                        <!-- Contenido relacionado con el inventario -->
+                        <!-- Puedes agregar tus propios elementos y diseño aquí -->
+                        <p>Aquí puedes gestionar el inventario de productos.</p>
+                        <a href="#" class="btn btn-primary"><i class="fa fa-list-alt"></i> Ver inventario</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- /.content -->
+</div>
+<!-- /.content-wrapper -->
+
