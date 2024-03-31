@@ -6,6 +6,17 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddSession(
+    options =>
+    {
+        options.IOTimeout = TimeSpan.FromMinutes(30);
+        options.Cookie.HttpOnly = true;
+    }
+    );
+
+
+
 //inyeccion de dependencias
 builder.Services.AddDbContext<Agroservicio.DbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("Cadena"))
@@ -33,8 +44,10 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+
 app.UseAuthorization();
 
+app.UseSession();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");

@@ -8,10 +8,10 @@ namespace Agroservicio
 
         public DbContext(DbContextOptions<DbContext> options ): base (options)
         {
-        
         }
 
         public DbSet<Models.Marca> Marca { get; set; }
+        public DbSet<Models.Usuario> Usuario { get; set; }
 
     }
 }
