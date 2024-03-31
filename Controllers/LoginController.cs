@@ -25,14 +25,53 @@ namespace Agroservicio.Controllers
         [HttpPost]
         public IActionResult Login(Usuario value)
         {
+            try
+            {
+                var UsuarioNombre = _contextDB.Usuario.
+                Where(x => x.Nombre == value.Nombre )
+                .FirstOrDefault();
 
-            HttpContext.Session.SetString("Message", "Hello MVC!");
+                var Usuario = _contextDB.Usuario.
+                Where(x => x.Nombre == value.Nombre && x.Contraseña == EncriptarString(value.Contraseña))
+                .FirstOrDefault();
 
+                if (Usuario != null)
+                {
 
-
-            string message = HttpContext.Session.GetString("Message");
-
+                    return RedirectToAction("Index", "Home");
+                }
+                else
+                {
+                    TempData["Resultado"] = "Error";
+                    if (UsuarioNombre != null)
+                    {
+                        TempData["Mensaje"] = "Contraseña incorrecta";
+                    }
+                    else
+                    {
+                        TempData["Mensaje"] = "Usuario no encontrado";
+                    }
+                }
+            }
+            catch (Exception Error)
+            {
+                TempData["Resultado"] = "Error";
+                TempData["Mensaje"] = Error.Message;
+            }
             return View();
+
+
+
+
+
+
+            //HttpContext.Session.SetString("Message", "Hello MVC!");
+
+
+
+            //string message = HttpContext.Session.GetString("Message");
+
+
         }
 
         [HttpPost]
