@@ -12,6 +12,11 @@ namespace Agroservicio
 
         public DbSet<Models.Marca> Marca { get; set; }
         public DbSet<Models.Usuario> Usuario { get; set; }
+        public DbSet<Models.GrupoTipoProducto> GrupoTipoProducto { get; set; }
+        public DbSet<Models.TipoProducto> TipoProducto { get; set; }
+        public DbSet<Models.BaseProducto> BaseProducto { get; set; }
+        public DbSet<Models.EmpaqueProducto> EmpaqueProducto { get; set; }
+        public DbSet<Models.Producto> Producto { get; set; }
 
     }
 }
