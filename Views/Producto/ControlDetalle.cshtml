@@ -1,132 +1,87 @@
 ﻿@using Agroservicio.Models;
 @{
-    var Marca = new List<Marca>();
-    if (ViewBag.MarcaList != null)
-    {
-        Marca = (List<Marca>)ViewBag.MarcaList;
-    } 
-    var TipoProducto = new List<TipoProducto>();
-    if (ViewBag.TipoProductoList != null)
-    {
-        TipoProducto = (List<TipoProducto>)ViewBag.TipoProductoList;
-    }
-    var GrupoTipoProducto = new List<GrupoTipoProducto>();
-    if (ViewBag.GrupoTipoProductoList != null)
-    {
-        GrupoTipoProducto = (List<GrupoTipoProducto>)ViewBag.GrupoTipoProductoList;
-    }
+
 }
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <h1>
+            @*            <button id="myButton" class="btn btn-primary">Mostrar SweetAlert</button>
+            *@     Gestion De Detalles De Productos
+        </h1>
+    </section>
 
-<div class="container">
-    <h2>Lista de GrupoTipoProducto </h2>
-    <div class="row">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">
-                    <div class="text-left ">
-                        <button class="btn btn-primary" data-toggle="collapse" data-target="#crearAcordeon">Crear</button>
+    <!-- Main content -->
+    <section class="content">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="box box-info animated slideInRight">
+                    <div class="box-header with-border">
+                        <h3 class="box-title"><i class="fa fa-cubes"></i> Productos</h3>
                     </div>
-                </div>
-                <div id="crearAcordeon" class="collapse">
-                    <div class="card-body">
-                        <form asp-action="CrearGrupoTipoProducto" method="post">
-                            <div class="form-group">
-                                <label for="nombre">Nombre</label>
-                                <input type="text" id="nombre" name="Nombre" class="form-control" />
-                            </div>
-                            <button type="submit" class="btn btn-success">Guardar</button>
-                        </form>
+                    <div class="box-body">
+                        <!-- Contenido relacionado con los productos -->
+                        <table class="table table-hover">
+                            <tbody>
+                                <tr>
+                                    <td>Marca de productos</td>
+                                    <td class="text-right">
+                                        <a href="@Url.Action("Marca", "Producto")" class="btn btn-default">
+                                            <i class="fa fa-shopping-bag" aria-hidden="true"></i>
+                                        </a>
+                                    </td>
+
+                                </tr>
+                                <tr>
+                                    <td>Tipos de producto</td>
+                                    <td class="text-right">
+                                        <a href="@Url.Action("TipoProducto", "Producto")" class="btn btn-default">
+                                            <i class="fa fa-plus" aria-hidden="true"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Grupo Tipo Producto</td>
+                                    <td class="text-right">
+                                        <a href="@Url.Action("GrupoTipoProducto", "Producto")" class="btn btn-default">
+                                            <i class="fa fa-sitemap" aria-hidden="true"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Empaque Producto</td>
+                                    <td class="text-right">
+                                        <a href="@Url.Action("EmpaqueProducto", "Producto")" class="btn btn-default">
+                                            <i class="fa fa-shopping-basket" aria-hidden="true"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                                <!-- Add other rows here -->
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
-    <hr />
-    <div class="row card">
-        <div class="col-md-12">
-            <table class="table table-bordered">
-                <thead>
-                    <tr>
-                        <th>Nombre</th>
-                        <th>Accion</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var item in GrupoTipoProducto)
-                    {
-                        <tr>
-                            <td>@item.Nombre</td>
-                            <td>
-                                <button class="btn btn-primary editar-btn" data-id="@item.Id" data-nombre="@item.Nombre">Editar</button>
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
-    </div>
+    </section>
+    <!-- /.content -->
 </div>
-
-<!-- Modal para editar -->
-<div class="modal fade" id="editarModal" tabindex="-1" role="dialog" aria-labelledby="editarModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="editarModalLabel">Editar TipoProducto</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <form id="editarForm" action="@Url.Action("EditarGrupoTipoProducto", "Producto")" method="post">
-                <div class="modal-body">
-                    <input type="hidden" id="TipoProductoId" name="Id" />
-                    <div class="form-group">
-                        <label for="nuevoNombre">Nuevo Nombre:</label>
-                        <input type="text" class="form-control" id="nuevoNombre" name="Nombre"  required/>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                    <button type="submit" class="btn btn-primary">Guardar Cambios</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-@section scripts {
+<!-- /.content-wrapper -->
+@section Scripts {
+    <script src="~/plugins/sweetalert2/sweetalert2.min.js"></script>
     <script>
         $(document).ready(function () {
-            // Botón Editar
-            $(".editar-btn").click(function () {
-                var TipoProductoId = $(this).data("id");
-                var nombreActual = $(this).data("nombre");
-                $("#TipoProductoId").val(TipoProductoId);
-                $("#nuevoNombre").val(nombreActual);
-                $("#editarModal").modal("show");
+            $('#myButton').click(function () {
+                Swal.fire({
+                    title: 'SweetAlert!',
+                    text: '¡Este es un mensaje de SweetAlert!',
+                    icon: 'success',
+                    confirmButtonText: 'Aceptar'
+                });
             });
         });
     </script>
-
-    <script>
-        var creacionExito = '@TempData["CreacionExito"]';
-        var error = '@TempData["Error"]';
-        var mensaje = '@TempData["Mensaje"]';
-
-        if (creacionExito === "Si") {
-            Swal.fire({
-                title: "",
-                text: mensaje,
-                icon: "success"
-            });
-        }
-
-        if (error === "Si") {
-            Swal.fire({
-                title: "Error",
-                text: mensaje,
-                icon: "error"
-            });
-        }
-    </script>
+}
+@section Styles {
+    <link href="~/plugins/sweetalert2/sweetalert2.min.css" rel="stylesheet" />
 }
 

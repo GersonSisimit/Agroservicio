@@ -32,8 +32,15 @@ namespace Agroservicio.Controllers
 
             return View();
         }
+        #region GrupoTipoProducto
+        public ActionResult GrupoTipoProducto()
+        {
+            ViewBag.GrupoTipoProductoList = _contextDB.GrupoTipoProducto.ToList();
+
+            return View();
+        }
         [HttpPost]
-        public ActionResult CrearGrupoTipoProducto(GrupoTipoProducto value )
+        public ActionResult CrearGrupoTipoProducto(GrupoTipoProducto value)
         {
             if (ModelState.IsValid)
             {
@@ -50,7 +57,7 @@ namespace Agroservicio.Controllers
                     TempData["Mensaje"] = Error.Message;
                 }
             }
-            return RedirectToAction("ControlDetalle", "Producto");
+            return RedirectToAction("GrupoTipoProducto", "Producto");
         }
         [HttpPost]
         public IActionResult EditarGrupoTipoProducto(GrupoTipoProducto value)
@@ -75,7 +82,118 @@ namespace Agroservicio.Controllers
                 TempData["CreacionExito"] = "Si";
                 TempData["Mensaje"] = "Modificacion Exitosa";
             }
-            return RedirectToAction("ControlDetalle", "Producto");
+            return RedirectToAction("GrupoTipoProducto", "Producto");
         }
+        #endregion
+
+        #region Empaque Producto
+
+        public ActionResult EmpaqueProducto()
+        {
+            ViewBag.EmpaqueProducto = _contextDB.EmpaqueProducto.ToList();
+
+            return View();
+        }
+        [HttpPost]
+        public ActionResult CrearEmpaqueProducto(EmpaqueProducto value)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _contextDB.EmpaqueProducto.Add(value);
+                    _contextDB.SaveChanges();
+                    TempData["CreacionExito"] = "Si";
+                    TempData["Mensaje"] = "Creacion Exitosa";
+                }
+                catch (Exception Error)
+                {
+                    TempData["Error"] = "Si";
+                    TempData["Mensaje"] = Error.Message;
+                }
+            }
+            return RedirectToAction("EmpaqueProducto", "Producto");
+        }
+        [HttpPost]
+        public IActionResult EditarEmpaqueProducto(EmpaqueProducto value)
+        {
+            if (ModelState.IsValid)
+            {
+                var Existente = _contextDB.EmpaqueProducto.Find(value.Id);
+                if (Existente == null)
+                {
+                    TempData["Error"] = "Si";
+                    TempData["Mensaje"] = "No se encontró el registro";
+                    return RedirectToAction("EmpaqueProducto", "Producto");
+                }
+                if (string.IsNullOrWhiteSpace(value.Nombre))
+                {
+                    TempData["Error"] = "Si";
+                    TempData["Mensaje"] = "No ingrese un nombre en blanco";
+                    return RedirectToAction("EmpaqueProducto", "Producto");
+                }
+                Existente.Nombre = value.Nombre;
+                _contextDB.SaveChanges();
+                TempData["CreacionExito"] = "Si";
+                TempData["Mensaje"] = "Modificacion Exitosa";
+            }
+            return RedirectToAction("EmpaqueProducto", "Producto");
+        }
+
+        #endregion
+
+        #region Marca
+        public ActionResult Marca()
+        {
+            ViewBag.Marca = _contextDB.Marca.ToList();
+
+            return View();
+        }
+        [HttpPost]
+        public ActionResult CrearMarca(Marca value)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _contextDB.Marca.Add(value);
+                    _contextDB.SaveChanges();
+                    TempData["CreacionExito"] = "Si";
+                    TempData["Mensaje"] = "Creacion Exitosa";
+                }
+                catch (Exception Error)
+                {
+                    TempData["Error"] = "Si";
+                    TempData["Mensaje"] = Error.Message;
+                }
+            }
+            return RedirectToAction("Marca", "Producto");
+        }
+        [HttpPost]
+        public IActionResult EditarMarca(Marca value)
+        {
+            if (ModelState.IsValid)
+            {
+                var Existente = _contextDB.Marca.Find(value.Id);
+                if (Existente == null)
+                {
+                    TempData["Error"] = "Si";
+                    TempData["Mensaje"] = "No se encontró el registro";
+                    return RedirectToAction("Marca", "Producto");
+                }
+                if (string.IsNullOrWhiteSpace(value.Nombre))
+                {
+                    TempData["Error"] = "Si";
+                    TempData["Mensaje"] = "No ingrese un nombre en blanco";
+                    return RedirectToAction("Marca", "Producto");
+                }
+                Existente.Nombre = value.Nombre;
+                _contextDB.SaveChanges();
+                TempData["CreacionExito"] = "Si";
+                TempData["Mensaje"] = "Modificacion Exitosa";
+            }
+            return RedirectToAction("Marca", "Producto");
+        }
+        #endregion
     }
 }
