@@ -7,6 +7,9 @@
             *@            Punto de Venta e Inventario
         </h1>
     </section>
+    <button onclick="test()">
+        mmsssssswaa
+    </button>
     <!-- Main content -->
     <section class="content">
         <div class="row">
@@ -63,7 +66,7 @@
                                 <tr>
                                     <td>Gestionar Detalles Productos</td>
                                     <td class="text-right">
-                                        <a href="@Url.Action("GestionProducto", "Productos")" class="btn btn-default">
+                                        <a href="@Url.Action("ControlDetalle", "Producto")" class="btn btn-default">
                                             <i class="fa fa-cog" aria-hidden="true"></i>
                                         </a>
                                     </td>
@@ -124,3 +127,13 @@
     </section>
     <!-- /.content -->
 </div>
+
+<script>
+    function test() {
+        Swal.fire({
+            title: "Good job!",
+            text: "You clicked the button!",
+            icon: "success"
+        });
+    }
+</script>
