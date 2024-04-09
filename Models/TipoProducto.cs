@@ -13,6 +13,5 @@ namespace Agroservicio.Models
         [ForeignKey("IdGrupoTipoProducto")]
         public virtual required GrupoTipoProducto GrupoTipoProducto { get; set; }
 
-
     }
 }

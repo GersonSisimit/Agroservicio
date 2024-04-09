@@ -195,5 +195,60 @@ namespace Agroservicio.Controllers
             return RedirectToAction("Marca", "Producto");
         }
         #endregion
+
+        #region Tipo producto
+
+        public ActionResult TipoProducto()
+        {
+            ViewBag.TipoProducto = _contextDB.TipoProducto.ToList();
+            ViewBag.GrupoTipoProducto = _contextDB.GrupoTipoProducto.ToList();
+
+            return View();
+        }
+        [HttpPost]
+        public ActionResult CrearTipoProducto(TipoProducto value)
+        {
+            
+                try
+                {
+                    _contextDB.TipoProducto.Add(value);
+                    _contextDB.SaveChanges();
+                    TempData["CreacionExito"] = "Si";
+                    TempData["Mensaje"] = "Creacion Exitosa";
+                }
+                catch (Exception Error)
+                {
+                    TempData["Error"] = "Si";
+                    TempData["Mensaje"] = Error.Message;
+                }
+            
+            return RedirectToAction("TipoProducto", "Producto");
+        }
+        [HttpPost]
+        public IActionResult EditarTipoProducto(TipoProducto value)
+        {
+           
+                var Existente = _contextDB.TipoProducto.Find(value.Id);
+                if (Existente == null)
+                {
+                    TempData["Error"] = "Si";
+                    TempData["Mensaje"] = "No se encontró el registro";
+                    return RedirectToAction("TipoProducto", "Producto");
+                }
+                if (string.IsNullOrWhiteSpace(value.Nombre))
+                {
+                    TempData["Error"] = "Si";
+                    TempData["Mensaje"] = "No ingrese un nombre en blanco";
+                    return RedirectToAction("TipoProducto", "Producto");
+                }
+                Existente.Nombre = value.Nombre;
+                _contextDB.SaveChanges();
+                TempData["CreacionExito"] = "Si";
+                TempData["Mensaje"] = "Modificacion Exitosa";
+            
+            return RedirectToAction("TipoProducto", "Producto");
+        }
+
+        #endregion
     }
 }
