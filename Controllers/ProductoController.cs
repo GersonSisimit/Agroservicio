@@ -208,47 +208,103 @@ namespace Agroservicio.Controllers
         [HttpPost]
         public ActionResult CrearTipoProducto(TipoProducto value)
         {
-            
-                try
-                {
-                    _contextDB.TipoProducto.Add(value);
-                    _contextDB.SaveChanges();
-                    TempData["CreacionExito"] = "Si";
-                    TempData["Mensaje"] = "Creacion Exitosa";
-                }
-                catch (Exception Error)
-                {
-                    TempData["Error"] = "Si";
-                    TempData["Mensaje"] = Error.Message;
-                }
-            
+
+            try
+            {
+                _contextDB.TipoProducto.Add(value);
+                _contextDB.SaveChanges();
+                TempData["CreacionExito"] = "Si";
+                TempData["Mensaje"] = "Creacion Exitosa";
+            }
+            catch (Exception Error)
+            {
+                TempData["Error"] = "Si";
+                TempData["Mensaje"] = Error.Message;
+            }
+
             return RedirectToAction("TipoProducto", "Producto");
         }
         [HttpPost]
         public IActionResult EditarTipoProducto(TipoProducto value)
         {
-           
-                var Existente = _contextDB.TipoProducto.Find(value.Id);
-                if (Existente == null)
-                {
-                    TempData["Error"] = "Si";
-                    TempData["Mensaje"] = "No se encontró el registro";
-                    return RedirectToAction("TipoProducto", "Producto");
-                }
-                if (string.IsNullOrWhiteSpace(value.Nombre))
-                {
-                    TempData["Error"] = "Si";
-                    TempData["Mensaje"] = "No ingrese un nombre en blanco";
-                    return RedirectToAction("TipoProducto", "Producto");
-                }
-                Existente.Nombre = value.Nombre;
-                _contextDB.SaveChanges();
-                TempData["CreacionExito"] = "Si";
-                TempData["Mensaje"] = "Modificacion Exitosa";
-            
+
+            var Existente = _contextDB.TipoProducto.Find(value.Id);
+            if (Existente == null)
+            {
+                TempData["Error"] = "Si";
+                TempData["Mensaje"] = "No se encontró el registro";
+                return RedirectToAction("TipoProducto", "Producto");
+            }
+            if (string.IsNullOrWhiteSpace(value.Nombre))
+            {
+                TempData["Error"] = "Si";
+                TempData["Mensaje"] = "No ingrese un nombre en blanco";
+                return RedirectToAction("TipoProducto", "Producto");
+            }
+            Existente.Nombre = value.Nombre;
+            _contextDB.SaveChanges();
+            TempData["CreacionExito"] = "Si";
+            TempData["Mensaje"] = "Modificacion Exitosa";
+
             return RedirectToAction("TipoProducto", "Producto");
         }
 
         #endregion
+
+        #region BaseProducto
+        public ActionResult BaseProducto()
+        {
+            ViewBag.BaseProducto = _contextDB.BaseProducto.ToList();
+            ViewBag.TipoProducto = _contextDB.TipoProducto.ToList();
+            ViewBag.Marca = _contextDB.Marca.ToList();
+
+
+            return View();
+        }
+        [HttpPost]
+        public ActionResult CrearBaseProducto(BaseProducto value)
+        {
+
+            try
+            {
+                _contextDB.BaseProducto.Add(value);
+                _contextDB.SaveChanges();
+                TempData["CreacionExito"] = "Si";
+                TempData["Mensaje"] = "Creacion Exitosa";
+            }
+            catch (Exception Error)
+            {
+                TempData["Error"] = "Si";
+                TempData["Mensaje"] = Error.Message;
+            }
+
+            return RedirectToAction("BaseProducto", "Producto");
+        }
+        [HttpPost]
+        public IActionResult EditarBaseProducto(BaseProducto value)
+        {
+
+            var Existente = _contextDB.BaseProducto.Find(value.Id);
+            if (Existente == null)
+            {
+                TempData["Error"] = "Si";
+                TempData["Mensaje"] = "No se encontró el registro";
+                return RedirectToAction("BaseProducto", "Producto");
+            }
+            if (string.IsNullOrWhiteSpace(value.Nombre))
+            {
+                TempData["Error"] = "Si";
+                TempData["Mensaje"] = "No ingrese un nombre en blanco";
+                return RedirectToAction("BaseProducto", "Producto");
+            }
+            Existente.Nombre = value.Nombre;
+            _contextDB.SaveChanges();
+            TempData["CreacionExito"] = "Si";
+            TempData["Mensaje"] = "Modificacion Exitosa";
+
+            return RedirectToAction("BaseProducto", "Producto");
+        }
+        #endregion
+
     }
 }
