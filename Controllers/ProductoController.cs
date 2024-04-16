@@ -306,5 +306,30 @@ namespace Agroservicio.Controllers
         }
         #endregion
 
+        #region Producto 
+        /// <summary>
+        /// Vista para mostrar las diversas presentaciones que puede tener un producto
+        /// </summary>
+        /// <param name="idProductoBase">Id producto base</param>
+        /// <returns></returns>
+        public ActionResult PresentacionProducto(int IdBaseProducto)
+        {
+
+            var BaseProducto = _contextDB.BaseProducto.Where(BaseProducto => BaseProducto.Id == IdBaseProducto).FirstOrDefault();
+            if (BaseProducto != null)
+            {
+                var Marca = _contextDB.Marca.Where(marca => marca.Id == BaseProducto.IdMarca).FirstOrDefault();
+                var TipoProducto = _contextDB.TipoProducto.Where(TipoProducto => TipoProducto.Id == BaseProducto.IdTipoProducto).FirstOrDefault();
+                
+                ViewBag.ProductoBaseNombre = BaseProducto.Nombre;
+                ViewBag.IdBaseProducto = IdBaseProducto;
+                ViewBag.Marca = Marca.Nombre;
+                ViewBag.TipoProducto = TipoProducto.Nombre;
+            }
+            ViewBag.PresentacionesProducto = _contextDB.Producto.Where(Producto => Producto.IdBaseProducto == IdBaseProducto).ToList();
+            return View();
+        }
+
+        #endregion
     }
 }

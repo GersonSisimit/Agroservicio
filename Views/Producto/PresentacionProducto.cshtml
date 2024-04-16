@@ -1,0 +1,180 @@
+﻿
+@{
+    IList<Agroservicio.Models.Producto> Presentaciones = new List<Agroservicio.Models.Producto>();
+    if (ViewBag.PresentacionesProducto != null)
+    {
+        Presentaciones = (IList<Agroservicio.Models.Producto>)ViewBag.PresentacionesProducto;
+    }
+
+    var NombreProducto = "";
+    if (ViewBag.ProductoBaseNombre != null)
+    {
+        NombreProducto = (string)ViewBag.ProductoBaseNombre;
+    }
+    int IdBaseProducto = 0;
+
+    if (ViewBag.IdBaseProducto != null)
+    {
+        IdBaseProducto = (int)ViewBag.IdBaseProducto;
+    }
+
+    var Marca = "";
+    if (ViewBag.Marca != null)
+    {
+        Marca = (string)ViewBag.Marca;
+    }
+}
+
+<div class="content-wrapper">
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0">Detalle de Producto</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <!-- Detalle del Producto -->
+                <div class="col-md-7">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label for="nombre"><i class="fas fa-font"></i> Nombre</label>
+                                <input type="text" class="form-control" id="nombre" value="@NombreProducto" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label for="tipoProducto"><i class="fas fa-tags text-success"></i> Tipo de Producto</label>
+                                <input type="text" class="form-control" id="tipoProducto" value="" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label for="subtipoProducto"><i class="fas fa-cubes text-info"></i> Subtipo de Producto</label>
+                                <input type="text" class="form-control" id="subtipoProducto" value="" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label for="marca"><i class="fas fa-tag text-warning"></i> Marca</label>
+                                <input type="text" class="form-control" id="marca" value="@Marca" readonly>
+                            </div>
+
+                            <!-- Agregar o actualizar imagen del producto -->
+                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalPresentaciones">
+                                Agregar Presentacion
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Presentaciones del producto -->
+                <div class="col-md-5">
+                    <div class="card">
+                        <div class="card-header ">
+                            <h5 class="card-title">
+                                <i class="fas fa-cubes"></i> Presentaciones
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <ul class="list-group">
+                                @foreach (var presentacion in Presentaciones)
+                                {
+                                    //var detalle = DetallePresentaciones.FirstOrDefault(x => x.Id == presentacion.IdDetallePresentacion);
+
+                                    <li class="list-group-item">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <span class="font-weight-bold"><i class="fas fa-archive text-info"></i> Nombre:</span>
+                                                <span></span>
+                                            </div>
+                                            <div>
+                                                <span class="font-weight-bold"><i class="fas fa-money-bill-wave text-success"></i> Precio:</span>
+                                                <span>@presentacion.Precio</span>
+                                            </div>
+                                            <div>
+                                                <span class="font-weight-bold"><i class="fas fa-cubes"></i> Existencia:</span>
+                                                <span>@presentacion.Existencia</span>
+                                            </div>
+                                        </div>
+                                        <br>
+                                        <button class="btn btn-primary" onclick="VerDetallePresentacion('@presentacion.Id')" title="Ver presentacion">
+                                            <i class="fas fa-eye"></i> Ver
+                                        </button>
+                                    </li>
+                                }
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </section>
+</div>
+
+<div>
+    <div class="modal fade" id="modalPresentaciones" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalLabel">Ingrese los detalles</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div>
+                        <div class="form-group">
+                            <!-- Input para Precio -->
+
+                            <label for="precio">Precio:</label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">$</span>
+                                </div>
+                                <input type="number" class="form-control" id="precio" step="any" placeholder="Ingrese el precio" />
+                            </div>
+                        </div>
+
+                        <!-- Input para Existencia -->
+                        <div class="form-group">
+                            <label for="existencia">Existencia:</label>
+                            <input type="number" class="form-control" id="existencia" step="any" placeholder="Ingrese la existencia" />
+                        </div>
+                    </div>
+                    <hr />
+                    <ul class="nav nav-tabs" id="tabPresentaciones" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" id="tabLiquido" data-toggle="tab" href="#contenidoLiquido" role="tab" aria-controls="contenidoLiquido" aria-selected="true">Líquido</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="tabPolvo" data-toggle="tab" href="#contenidoPolvo" role="tab" aria-controls="contenidoPolvo" aria-selected="false">Polvo</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="tabOtros" data-toggle="tab" href="#contenidoOtros" role="tab" aria-controls="contenidoOtros" aria-selected="false">Otros</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content" id="contenidoPresentaciones">
+                        <div class="tab-pane fade show active" id="contenidoLiquido" role="tabpanel" aria-labelledby="tabLiquido">
+                            <h4>Líquido</h4>
+                            <div id="presentacionesLiquido"></div>
+                        </div>
+                        <div class="tab-pane fade" id="contenidoPolvo" role="tabpanel" aria-labelledby="tabPolvo">
+                            <h4>Polvo</h4>
+                            <div id="presentacionesPolvo"></div>
+                        </div>
+                        <div class="tab-pane fade" id="contenidoOtros" role="tabpanel" aria-labelledby="tabOtros">
+                            <h4>Otros</h4>
+                            <div id="presentacionesOtros"></div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
