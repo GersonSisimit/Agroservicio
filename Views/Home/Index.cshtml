@@ -1,11 +1,19 @@
 ﻿
 <div class="content-wrapper">
     <!-- Content Header (Page header) -->
-    <section class="content-header">
+    @if (Context.User.Identity.IsAuthenticated == true)
+    {
         <h1>
+            Bienvenido @Context.User.Identity.Name
+        </h1>
+        <hr />
+    }
+    <section class="content-header">
+       
+        <h2>
             @*            <button id="myButton" class="btn btn-primary">Mostrar SweetAlert</button>
             *@            Punto de Venta e Inventario
-        </h1>
+        </h2>
     </section>
     <!-- Main content -->
     <section class="content">
@@ -14,6 +22,7 @@
                 <div class="box box-success animated slideInRight">
                     <div class="box-header with-border">
                         <h3 class="box-title"><i class="fa fa-shopping-cart"></i> Ventas</h3>
+                        
                     </div>
                     <div class="box-body">
                         <!-- Contenido relacionado con las ventas -->
