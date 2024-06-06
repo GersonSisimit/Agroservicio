@@ -98,7 +98,7 @@
                                                 <td style="width:50%">@item.Nombre</td>
                                                 <td class="text-center">
                                                     <button class="btn btn-primary editar-btn" data-id="@item.Id" data-nombre="@item.Nombre">Editar</button>
-                                                    <a class="btn btn-info editar-btn" asp-action="PresentacionProducto" asp-route-IdBaseProducto="@item.Id">Ver Presentaciones</a>
+                                                    <a class="btn btn-info" asp-action="PresentacionProducto" asp-route-IdBaseProducto="@item.Id">Ver Presentaciones</a>
                                                 </td>
                                             </tr>
                                         }

@@ -320,11 +320,14 @@ namespace Agroservicio.Controllers
             {
                 var Marca = _contextDB.Marca.Where(marca => marca.Id == BaseProducto.IdMarca).FirstOrDefault();
                 var TipoProducto = _contextDB.TipoProducto.Where(TipoProducto => TipoProducto.Id == BaseProducto.IdTipoProducto).FirstOrDefault();
-                
+
+                var Grupo = _contextDB.GrupoTipoProducto.Where(x => x.Id == TipoProducto.IdGrupoTipoProducto).FirstOrDefault();
+
                 ViewBag.ProductoBaseNombre = BaseProducto.Nombre;
                 ViewBag.IdBaseProducto = IdBaseProducto;
                 ViewBag.Marca = Marca.Nombre;
                 ViewBag.TipoProducto = TipoProducto.Nombre;
+                ViewBag.Grupo = Grupo.Nombre;
             }
             ViewBag.PresentacionesProducto = _contextDB.Producto.Where(Producto => Producto.IdBaseProducto == IdBaseProducto).ToList();
             return View();

@@ -23,21 +23,33 @@
     {
         Marca = (string)ViewBag.Marca;
     }
+    var TipoProducto = "";
+    if (ViewBag.TipoProducto != null)
+    {
+        TipoProducto = (string)ViewBag.TipoProducto;
+    }
+
+    var Grupo = "";
+    if (ViewBag.Grupo != null)
+    {
+        Grupo = (string)ViewBag.Grupo;
+    }
+
 }
 <div class="col-md-5">
     <div class="card">
         <div class="card-body">
             <div class="form-group">
-                <label for="nombre"><i class="fas fa-font"></i> Nombre</label>
+                <label for="nombre">Nombre</label>
                 <input type="text" class="form-control" id="nombre" value="@NombreProducto" readonly>
             </div>
             <div class="form-group">
                 <label for="tipoProducto"><i class="fas fa-tags text-success"></i> Tipo de Producto</label>
-                <input type="text" class="form-control" id="tipoProducto" value="" readonly>
+                <input type="text" class="form-control" id="tipoProducto" value="@TipoProducto" readonly>
             </div>
             <div class="form-group">
-                <label for="subtipoProducto"><i class="fas fa-cubes text-info"></i> Subtipo de Producto</label>
-                <input type="text" class="form-control" id="subtipoProducto" value="" readonly>
+                <label for="subtipoProducto"><i class="fas fa-cubes text-info"></i> Grupo de Producto</label>
+                <input type="text" class="form-control" id="subtipoProducto" value="@Grupo" readonly>
             </div>
             <div class="form-group">
                 <label for="marca"><i class="fas fa-tag text-warning"></i> Marca</label>
