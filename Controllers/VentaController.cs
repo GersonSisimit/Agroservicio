@@ -19,49 +19,69 @@ namespace Agroservicio.Controllers
         {
             // Verificar si existe la sesión con la clave "Productos"
             var sessionProductos = HttpContext.Session.GetString("Productos");
+
             var productosDetalles = new List<object>();
             if (string.IsNullOrEmpty(sessionProductos))
-            if (string.IsNullOrEmpty(sessionProductos))
             {
-                // Si no existe la sesión, redirigir o manejarlo adecuadamente
                 return View(productosDetalles);
             }
 
-            // Deserializar el string en una lista de enteros
-            List<int> IdproductosEnSesion = JsonConvert.DeserializeObject<List<int>>(sessionProductos);
+            var ProductosAgregados = JsonConvert.DeserializeObject<List<Producto>>(sessionProductos);
+            if (ProductosAgregados != null)
+            {
+                foreach (var item in ProductosAgregados)
+                {
 
-            var Cantidad = JsonConvert.DeserializeObject<List<int>>(HttpContext.Session.GetString("Cantidad"));
+                    //var detallesProducto = (from producto in _context.Producto
+                    //                        join relacion in _context.DetalleProducto on producto.IdDetalleProducto equals relacion.Id
+                    //                        join tipoProducto in _context.TipoProducto on relacion.IdTipoProducto equals tipoProducto.Id
+                    //                        join subtipoProducto in _context.SubtipoProducto on relacion.IdSubtipoProducto equals subtipoProducto.Id
+                    //                        join marca in _context.Marca on producto.IdMarca equals marca.Id
+                    //                        join PresentacionProducto in _context.PresentacionProducto on producto.Id equals PresentacionProducto.IdProducto
+                    //                        where PresentacionProducto.Id == item
+                    //                        select new
+                    //                        {
+                    //                            PresentacionProducto.Id,
+                    //                            PresentacionProducto.Precio,
+                    //                            producto.Nombre,
+                    //                            TipoProducto = tipoProducto.Nombre,
+                    //                            SubtipoProducto = subtipoProducto.Nombre,
+                    //                            Marca = marca.Nombre,
+                    //                            RutaImagen = producto.RutaImagen,
+                    //                            DatoCantidad = item.Existencia
+                    //                        })
+                    //                         .FirstOrDefault();
 
-            int indice = 0;
-            //foreach (var item in IdproductosEnSesion)
-            //{
-            //    var DatoCantidad = Cantidad[indice];
-            //    var detallesProducto = (from producto in _context.Producto
-            //                            join relacion in _context.DetalleProducto on producto.IdDetalleProducto equals relacion.Id
-            //                            join tipoProducto in _context.TipoProducto on relacion.IdTipoProducto equals tipoProducto.Id
-            //                            join subtipoProducto in _context.SubtipoProducto on relacion.IdSubtipoProducto equals subtipoProducto.Id
-            //                            join marca in _context.Marca on producto.IdMarca equals marca.Id
-            //                            join PresentacionProducto in _context.PresentacionProducto on producto.Id equals PresentacionProducto.IdProducto
-            //                            where PresentacionProducto.Id == item
-            //                            select new
-            //                            {
-            //                                PresentacionProducto.Id,
-            //                                PresentacionProducto.Precio,
-            //                                producto.Nombre,
-            //                                TipoProducto = tipoProducto.Nombre,
-            //                                SubtipoProducto = subtipoProducto.Nombre,
-            //                                Marca = marca.Nombre,
-            //                                RutaImagen = producto.RutaImagen,
-            //                                DatoCantidad
-            //                            })
-            //                             .FirstOrDefault();
+                    var detallesProducto = (from Producto in _context.Producto
+                                            join BaseProducto in _context.BaseProducto on Producto.IdBaseProducto equals BaseProducto.Id
+                                            join Empaque in _context.EmpaqueProducto on Producto.IdEmpaqueProducto equals Empaque.Id
+                                            join Marca in _context.Marca on BaseProducto.IdMarca equals Marca.Id
+                                            join TipoProducto in _context.TipoProducto on BaseProducto.IdTipoProducto equals TipoProducto.Id
+                                            join GrupoTipoProducto in _context.GrupoTipoProducto on TipoProducto.IdGrupoTipoProducto equals GrupoTipoProducto.Id
+                                            where Producto.Id == item.Id
+                                            select new
+                                            {
+                                                Precio = Producto.Precio,
+                                                RutaImagen = Producto.RutaImagen,
+                                                ProductoExistencia = Producto.Existencia,
+                                                ProductoId = Producto.Id,
+                                                Nombre = BaseProducto.Nombre,
+                                                EmpaqueNombre = Empaque.Nombre,
+                                                Marca = Marca.Nombre, // Añadiendo este si es necesario
+                                                TipoProducto = TipoProducto.Nombre, // Añadiendo este si es necesario
+                                                GrupoTipoProducto = GrupoTipoProducto.Nombre,
+                                                Cantidad = item.Existencia
 
-            //    if (detallesProducto != null)
-            //    {
-            //        productosDetalles.Add(detallesProducto);
-            //    }
-            //    indice++;
-            //}
+                                            })
+                                          .FirstOrDefault();
+
+                    if (detallesProducto != null)
+                    {
+                        productosDetalles.Add(detallesProducto);
+                    }
+                }
+            }
+            
             return View(productosDetalles);
         }
 
@@ -113,14 +133,15 @@ namespace Agroservicio.Controllers
                 // Obtener la lista de productos existente de la sesión
                 var sessionProductos = HttpContext.Session.GetString("Productos");
 
-                if (sessionProductos != null)
+                if (sessionProductos == null)
                 {
-
+                    HttpContext.Session.SetString("Productos", JsonConvert.SerializeObject(DatosSeleccionados));
+                    return Json(new { Message = "Producto agregado", success = true });
                 }
-               
-                
-                    
-               
+
+                var productosAgregadosAnterior = JsonConvert.DeserializeObject<List<Producto>>(sessionProductos);
+                productosAgregadosAnterior.AddRange(DatosSeleccionados);
+                HttpContext.Session.SetString("Productos", JsonConvert.SerializeObject(productosAgregadosAnterior));
                 return Json(new { Message = "Producto agregado", success = true });
             }
             catch (System.Exception Error)
@@ -128,6 +149,19 @@ namespace Agroservicio.Controllers
                 return Json(new { Error = Error.Message, success = false });
             }
         }
-
+        [HttpPost]
+        public JsonResult VaciarSesion()
+        {
+            try
+            {
+                // Vaciar la sesión
+                HttpContext.Session.Remove("Productos");
+                return Json(new { success = true, message = "Carrito vaciado" });
+            }
+            catch (System.Exception Error)
+            {
+                return Json(new { success = false, message = Error.Message });
+            }
+        }
     }
 }

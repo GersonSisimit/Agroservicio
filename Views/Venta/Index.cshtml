@@ -5,7 +5,6 @@
     Layout = "_Layout";
     var relacionTipoSubtipoProducto = ViewBag.RelacionTipoSubtipoProducto;
     var SubtipoProducto = ViewBag.SubtipoProducto;
-
     double TotalFinal = 0;
 }
 
@@ -77,49 +76,74 @@
         </div>
     </section>
     <div class="container">
-        <h2>Productos Agregados</h2>
-        <table class="table table-bordered table-hover">
-            <button id="btnVaciarSesion" class="btn btn-primary mb-3">Vaciar Carrito</button>
-            <thead>
-                <tr>
-                    <th>Cantidad</th>
-                    <th>Nombre</th>
-                    <th>Tipo de Producto</th>
-                    <th>Subtipo de Producto</th>
-                    <th>Marca</th>
-                    <th>Precio</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var producto in Model)
-                {
-                    <tr>
-                        <td>@producto.DatoCantidad</td>
-                        <td>@producto.Nombre</td>
-                        <td>@producto.TipoProducto</td>
-                        <td>@producto.SubtipoProducto</td>
-                        <td>@producto.Marca</td>
-                        <td>Q @producto.Precio</td>
-                    </tr>
-                    TotalFinal += producto.Precio * producto.DatoCantidad;
-                }
-            </tbody>
-        </table>
-        <div class="row">
-            <div class="col-md-12">
-                @if (TotalFinal != 0)
-                {
-                    <h1>Total Final: @TotalFinal</h1>
-                    <button onclick="GenerarCompra()" class="btn btn-primary">Generar Compra</button>
-                }
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title">
+                    <h2>Productos Agregados</h2>
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <table class="table table-bordered table-hover">
+                        @if (Model.Count > 0)
+                        {
+                            <button id="btnVaciarSesion" class="btn btn-danger mb-3">
+                                <i class="fa fa-trash-alt"></i> Vaciar Carrito
+                            </button>
+                        }
+
+                        <thead>
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Tipo de Producto</th>
+                                <th>Subtipo de Producto</th>
+                                <th>Marca</th>
+                                <th>Cantidad</th>
+                                <th>Precio</th>
+                                <th>Subtotal</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var producto in Model)
+                            {
+                                var SubTotal = producto.Precio * producto.Cantidad;
+                                <tr>
+                                    <td>@producto.Nombre</td>
+                                    <td>@producto.TipoProducto</td>
+                                    <td>@producto.GrupoTipoProducto</td>
+                                    <td>@producto.Marca</td>
+                                    <td>@producto.Cantidad</td>
+                                    <td>Q @producto.Precio</td>
+                                    <td>Q @SubTotal</td>
+                                </tr>
+                                TotalFinal += producto.Precio * producto.Cantidad;
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="card-footer">
+                <div class="col-md-12">
+                    @if (TotalFinal != 0)
+                    {
+                        <h1>Total Final: @TotalFinal</h1>
+                        <button onclick="GenerarCompra()" class="btn btn-primary">Generar Compra</button>
+                    }
+                </div>
             </div>
         </div>
     </div>
 </div>
 
 @section Scripts {
-
     <script>
+
+        var Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000
+        });
         function GenerarCompra() {
             alert("Vamo a comprar");
         }
@@ -181,11 +205,14 @@
         $(document).ready(function () {
             $('#btnVaciarSesion').click(function () {
                 $.ajax({
-                    url: '@Url.Action("VaciarSesion", "Ventas")',
+                    url: '@Url.Action("VaciarSesion", "Venta")',
                     type: 'POST',
                     success: function (result) {
                         if (result.success) {
-                            alert(result.message); // Puedes reemplazar esto con cualquier notificación
+                            Toast.fire({
+                                icon: 'success',
+                                title: result.message
+                            })
                             // Esperar medio segundo antes de recargar la página
                             setTimeout(function () {
                                 window.location.reload();

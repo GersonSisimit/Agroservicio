@@ -16,98 +16,7 @@
             margin: 10px; /* Ajusta el margen según sea necesario */
         }
     </style>
-    <script>
-        var Toast = Swal.mixin({
-            toast: true,
-            position: 'top-end',
-            showConfirmButton: false,
-            timer: 3000
-        });
-        function MostrarIdSeleccionados() {
-            var DatosSeleccionados = [];
-            var valid = true;
-
-            $('.checkboxSeleccion:checked').each(function () {
-                var idProducto = $(this).attr('id');
-                var cantidad = parseInt($('#CantidadProducto' + idProducto).val());
-                var existencia = parseInt($(this).data('existencia'));
-
-                if (cantidad > existencia) {
-                    Toast.fire({
-                        icon: 'error',
-                        title: 'La cantidad ingresada para el producto con ID ' + idProducto + ' excede la existencia disponible.'
-                    });
-                    valid = false;
-                    return false;
-                }
-
-                if (cantidad > 0) {
-                    DatosSeleccionados.push({ Id: idProducto, Existencia: existencia });
-                }
-                else {
-                    Toast.fire({
-                        icon: 'error',
-                        title: 'Hay  lineas seleccionadas sin indicar cantidad'
-                    });
-
-                    valid = false;
-                    return false; 
-                }
-            });
-            if (valid) {
-                console.log(DatosSeleccionados);
-                $.ajax({
-                    url: '@Url.Action("InsertarProducto", "Venta")',
-                    type: 'POST',
-                    data: {
-                        DatosSeleccionados
-                    },
-                    success: function (result) {
-
-                    },
-                    error: function (xhr, status, error) {
-                        swal({
-                            title: "Error",
-                            text: "Ocurrió un error al realizar la solicitud.",
-                            type: "error"
-                        });
-                    }
-                });
-            }
-            // if (DatosSeleccionados.length === 0) {
-            //     Toast.fire({
-            //         icon: 'error',
-            //         title: 'Las lineas seleccionadas no son validas, validar cantidad'
-            //     });
-            //     return false;
-            // }
-
-            
-           
-        }
-
-        function ValidarSeleccion(checkbox, existencia) {
-            var idProducto = checkbox.id;
-            var cantidadInput = $('#CantidadProducto' + idProducto);
-            if (checkbox.checked) {
-                cantidadInput.prop('disabled', false);
-            } else {
-                cantidadInput.prop('disabled', true);
-                cantidadInput.val('');
-            }
-        }
-
-        $(document).ready(function () {
-            $('[data-toggle="popover"]').popover({
-                html: true,
-                trigger: 'hover'
-            });
-
-            $('.checkboxSeleccion').each(function () {
-                ValidarSeleccion(this, $(this).data('existencia'));
-            });
-        });
-    </script>
+ 
 </head>
 <body>
     <div class="modal-header">
@@ -171,5 +80,101 @@
             }
         </tbody>
     </table>
+    <script>
+        var Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000
+        });
+        function MostrarIdSeleccionados() {
+            var DatosSeleccionados = [];
+            var valid = true;
+
+            $('.checkboxSeleccion:checked').each(function () {
+                var idProducto = $(this).attr('id');
+                var cantidad = parseInt($('#CantidadProducto' + idProducto).val());
+                var existencia = parseInt($(this).data('existencia'));
+
+                if (cantidad > existencia) {
+                    Toast.fire({
+                        icon: 'error',
+                        title: 'La cantidad ingresada para el producto con ID ' + idProducto + ' excede la existencia disponible.'
+                    });
+                    valid = false;
+                    return false;
+                }
+
+                if (cantidad > 0) {
+                    DatosSeleccionados.push({ Id: idProducto, Existencia: existencia });
+                }
+                else {
+                    Toast.fire({
+                        icon: 'error',
+                        title: 'Hay  lineas seleccionadas sin indicar cantidad'
+                    });
+
+                    valid = false;
+                    return false;
+                }
+            });
+            if (valid) {
+                if (DatosSeleccionados.length === 0) {
+                    Toast.fire({
+                        icon: 'error',
+                        title: 'No hay lineas seleccionadas'
+                    });
+                    return false;
+                }
+                $.ajax({
+                    url: '@Url.Action("InsertarProducto", "Venta")',
+                    type: 'POST',
+                    data: {
+                        DatosSeleccionados
+                    },
+                    success: function (result) {
+
+                        Toast.fire({
+                            icon: 'success',
+                            title: result.message
+                        })
+                        // Esperar medio segundo antes de recargar la página
+                        setTimeout(function () {
+                            window.location.reload();
+                        }, 500);
+                    },
+                    error: function (xhr, status, error) {
+                        swal({
+                            title: "Error",
+                            text: "Ocurrió un error al realizar la solicitud.",
+                            type: "error"
+                        });
+                    }
+                });
+            }
+        }
+
+        function ValidarSeleccion(checkbox, existencia) {
+            var idProducto = checkbox.id;
+            var cantidadInput = $('#CantidadProducto' + idProducto);
+            if (checkbox.checked) {
+                cantidadInput.prop('disabled', false);
+            } else {
+                cantidadInput.prop('disabled', true);
+                cantidadInput.val('');
+            }
+        }
+
+        $(document).ready(function () {
+            $('[data-toggle="popover"]').popover({
+                html: true,
+                trigger: 'hover'
+            });
+
+            $('.checkboxSeleccion').each(function () {
+                ValidarSeleccion(this, $(this).data('existencia'));
+            });
+        });
+    </script>
 </body>
 </html>
