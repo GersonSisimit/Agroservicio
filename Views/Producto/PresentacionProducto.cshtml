@@ -6,6 +6,12 @@
         Presentaciones = (IList<Agroservicio.Models.Producto>)ViewBag.PresentacionesProducto;
     }
 
+    var EmpaqueProductoLista = new List<Agroservicio.Models.EmpaqueProducto>();
+    if (ViewBag.EmpaqueProductoLista != null)
+    {
+        EmpaqueProductoLista = (List<Agroservicio.Models.EmpaqueProducto>)ViewBag.EmpaqueProductoLista;
+    }
+
     var NombreProducto = "";
     if (ViewBag.ProductoBaseNombre != null)
     {
@@ -34,7 +40,6 @@
     {
         Grupo = (string)ViewBag.Grupo;
     }
-
 }
 <div class="col-md-5">
     <div class="card">
@@ -65,28 +70,27 @@
                     </div>
                     <div id="crearAcordeon" class="collapse">
                         <div class="card-body">
-                            <form action="CrearBaseProducto" method="post">
+                            <form action="CrearProducto" method="post">
                                 <div class="form-group">
-                                    <label for="grupo">Tipo Producto</label>
-                                    <select id="IdTipoProducto" name="IdTipoProducto" required>
-                                        <option value="">Seleccione</option>
+                                    <input type="text" id="IdBaseProducto" name="IdBaseProducto" class="form-control" required value="@IdBaseProducto" />
+                                </div>
+                                <div class="form-group">
+                                    <label for="grupo">Empaque</label>
+                                    <select id="IdEmpaqueProducto" name="IdEmpaqueProducto" required>
+                                        @foreach (var Empaque in EmpaqueProductoLista)
+                                        {
+                                            <option value="@Empaque.Id">@Empaque.Nombre</option>
+                                        }
                                         
                                     </select>
                                 </div>
                                 <div class="form-group">
-                                    <label for="grupo">Marca</label>
-                                    <select id="IdMarca" name="IdMarca" required>
-                                        <option value="">Seleccione</option>
-                                        
-                                    </select>
+                                    <label for="nombre">Precio</label>
+                                    <input type="number" step="any" id="Precio" name="Precio" class="form-control" required />
                                 </div>
                                 <div class="form-group">
-                                    <label for="nombre">Nombre</label>
-                                    <input type="text" id="nombre" name="Nombre" class="form-control" required />
-                                </div>
-                                <div class="form-group">
-                                    <label for="nombre">Descripcion</label>
-                                    <input type="text" id="Descripcion" name="Descripcion" class="form-control" required />
+                                    <label for="nombre">Existencia</label>
+                                    <input type="number" step="any" id="Existencia" name="Existencia" class="form-control" required />
                                 </div>
                                 <button type="submit" class="btn btn-success">Guardar</button>
                             </form>
@@ -137,3 +141,26 @@
         </div>
     </div>
 </div>
+@section scripts {
+    <script>
+        var creacionExito = '@TempData["CreacionExito"]';
+        var error = '@TempData["Error"]';
+        var mensaje = '@TempData["Mensaje"]';
+
+        if (creacionExito === "Si") {
+            Swal.fire({
+                title: "",
+                text: mensaje,
+                icon: "success"
+            });
+        }
+
+        if (error === "Si") {
+            Swal.fire({
+                title: "Error",
+                text: mensaje,
+                icon: "error"
+            });
+        }
+    </script>
+}

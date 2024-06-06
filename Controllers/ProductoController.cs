@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Agroservicio.Controllers
 {
@@ -314,7 +315,6 @@ namespace Agroservicio.Controllers
         /// <returns></returns>
         public ActionResult PresentacionProducto(int IdBaseProducto)
         {
-
             var BaseProducto = _contextDB.BaseProducto.Where(BaseProducto => BaseProducto.Id == IdBaseProducto).FirstOrDefault();
             if (BaseProducto != null)
             {
@@ -323,16 +323,50 @@ namespace Agroservicio.Controllers
 
                 var Grupo = _contextDB.GrupoTipoProducto.Where(x => x.Id == TipoProducto.IdGrupoTipoProducto).FirstOrDefault();
 
+                var EmpaqueProductoLista = _contextDB.EmpaqueProducto.ToList();
+
                 ViewBag.ProductoBaseNombre = BaseProducto.Nombre;
                 ViewBag.IdBaseProducto = IdBaseProducto;
                 ViewBag.Marca = Marca.Nombre;
                 ViewBag.TipoProducto = TipoProducto.Nombre;
                 ViewBag.Grupo = Grupo.Nombre;
+
+                ViewBag.EmpaqueProductoLista = EmpaqueProductoLista;
             }
             ViewBag.PresentacionesProducto = _contextDB.Producto.Where(Producto => Producto.IdBaseProducto == IdBaseProducto).ToList();
             return View();
         }
 
+        [HttpPost]
+        public ActionResult CrearProducto(Producto value)
+        {
+
+            try
+            {
+                var Busqueda = _contextDB.Producto.Where(x => x.IdBaseProducto == value.IdBaseProducto && x.IdEmpaqueProducto == value.IdEmpaqueProducto).ToList();
+
+                if (Busqueda.Count != 0)
+                {
+                    TempData["Error"] = "Si";
+                    TempData["Mensaje"] = "Ya existe una presentacion creada";
+                    return RedirectToAction("PresentacionProducto", "Producto", new { IdBaseProducto = value.IdBaseProducto });
+
+                }
+
+                value.RutaImagen = "";
+                _contextDB.Producto.Add(value);
+                _contextDB.SaveChanges();
+                TempData["CreacionExito"] = "Si";
+                TempData["Mensaje"] = "Creacion Exitosa";
+            }
+            catch (Exception Error)
+            {
+                TempData["Error"] = "Si";
+                TempData["Mensaje"] = Error.Message;
+            }
+
+            return RedirectToAction("PresentacionProducto", "Producto",new { IdBaseProducto  = value.IdBaseProducto });
+        }
         #endregion
     }
 }

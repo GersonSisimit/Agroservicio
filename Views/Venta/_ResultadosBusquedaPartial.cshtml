@@ -1,39 +1,53 @@
-﻿<!-- _ResultadosBusquedaPartial.cshtml -->
-<div class="modal-header">
-    <h5 class="modal-title">Resultados de Búsqueda</h5>
-    <div class="ml-auto">
-
-        <button class="btn btn-primary" onclick="mostrarIdsSeleccionados()"> Agregar <i class="fa fa-cart-plus" aria-hidden="true"></i></button>
-
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Resultados de Búsqueda</title>
+    <style>
+        .checkboxSeleccion {
+            width: 15px; /* Ajusta el ancho */
+            height: 15px; /* Ajusta la altura */    
+            /* Para mejorar la accesibilidad y mantener la calidad visual */
+            transform: scale(1.5); /* Ajusta el factor de escala según sea necesario */
+            -webkit-transform: scale(1.5); /* Soporte para navegadores webkit */
+            -moz-transform: scale(1.5); /* Soporte para Firefox */
+            -o-transform: scale(1.5); /* Soporte para Opera */
+            -ms-transform: scale(1.5); /* Soporte para Internet Explorer */
+            margin: 10px; /* Ajusta el margen según sea necesario */
+        }
+    </style>
+</head>
+<body>
+    <div class="modal-header">
+        <h5 class="modal-title">Resultados de Búsqueda</h5>
+        <div class="ml-auto">
+            <button class="btn btn-primary" onclick="MostrarIdSeleccionados()">Agregar <i class="fa fa-cart-plus" aria-hidden="true"></i></button>
+        </div>
     </div>
 
-</div>
-
-<table class="table">
-    <thead>
-        <tr>
-            <th style="text-align:center">Nombre</th>
-            <th style="text-align:center">Imagen</th>
-            <th style="text-align:center">Precio</th>
-            <th style="text-align:center">Existencia</th>
-            <th style="text-align:center">Cantidad</th>
-            <th style="text-align:center">Selección</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            foreach (var item2 in item.Presentaciones)
+    <table class="table">
+        <thead>
+            <tr>
+                <th style="text-align:center">Nombre</th>
+                <th style="text-align:center">Imagen</th>
+                <th style="text-align:center">Precio</th>
+                <th style="text-align:center">Existencia</th>
+                <th style="text-align:center">Cantidad</th>
+                <th style="text-align:center">Selección</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var Item in Model)
             {
-                var IdCantidad = "CantidadProducto" + item2.Presentacion.Id;
+                var IdCantidad = "CantidadProducto" + Item.ProductoId;
 
                 <tr>
-                    <td style="text-align:center">@item.Producto.Nombre @item2.DetallePresentacion.Nombre @item.Marca.Nombre</td>
+                    <td style="text-align:center">@Item.BaseProductoNombre @Item.EmpaqueNombre @Item.MarcaNombre</td>
                     <td style="text-align:center">
-                        @if (@item2.Presentacion.RutaImagen != null)
+                        @if (Item.RutaImagen != null)
                         {
                             <!-- Agrega un botón para mostrar la imagen como popover -->
-                            <button type="button" class="btn btn-default" data-toggle="popover" title="Imagen" data-content="<img src='/ImagenesProductos/@item2.Presentacion.RutaImagen' class='img-fluid' alt='Product Image'>">
+                            <button type="button" class="btn btn-default" data-toggle="popover" title="Imagen" data-content="<img src='/ImagenesProductos/@Item.RutaImagen' class='img-fluid' alt='Product Image'>">
                                 <i class="fa fa-file-image-o" aria-hidden="true"></i>
                             </button>
                         }
@@ -42,15 +56,12 @@
                             <p>Sin imagen</p>
                         }
                     </td>
-                    <td style="text-align:center">Q @item2.Presentacion.Precio </td>
-                    <td style="text-align:center">@item2.Presentacion.Existencia</td>
-                    @if (item2.Presentacion.Existencia == 0)
+                    <td style="text-align:center">Q @Item.ProductoPrecio </td>
+                    <td style="text-align:center">@Item.ProductoExistencia</td>
+                    @if (Item.ProductoExistencia == 0)
                     {
                         <td style="text-align:center">
-
                             <p>No hay existencia disponible</p>
-
-
                         </td>
                         <td style="text-align:center">
                         </td>
@@ -58,142 +69,83 @@
                     else
                     {
                         <td style="text-align:center">
-
-                            <input type="number" id="@IdCantidad" />
+                            <input type="number" id="@IdCantidad" disabled onchange="ValidarExistencia(this.value,'@Item.ProductoExistencia','@@Item.ProductoId')" />
                         </td>
                         <td style="text-align:center">
-                            <input type="checkbox" class="checkboxSeleccion" id="@item2.Presentacion.Id" onchange="ValidarSeleccion(this, '@item2.Presentacion.Existencia')">
+                            <input type="checkbox" class="checkboxSeleccion" id="@Item.ProductoId" data-existencia="@Item.ProductoExistencia" onchange="ValidarSeleccion(this, '@Item.ProductoExistencia')">
                         </td>
                     }
                 </tr>
             }
-        }
-    </tbody>
-</table>
-
-@section Scripts {
-  
-
+        </tbody>
+    </table>
     <script>
-        var DetalleCantidad = 0;
+        var ErrorExistencia = false;
         var Toast = Swal.mixin({
             toast: true,
             position: 'top-end',
             showConfirmButton: false,
             timer: 3000
         });
-        $(function () {
-            $('[data-toggle="popover"]').popover({
-                html: true,
-                placement: 'bottom'
-            });
-        });
-        function ValidarSeleccion(DetalleChekBox, Existencia) {
-
-            var estadoCheckBox = document.getElementById(DetalleChekBox.id).checked;
-            var IdCantidad = "CantidadProducto" + DetalleChekBox.id;
-            DetalleCantidad = parseInt(document.getElementById(IdCantidad).value, 10);
-
-
-            if (estadoCheckBox == false) {
-                document.getElementById(IdCantidad).disabled = false;
-                return;
-            }
-
-            var checkboxSeleccionado = document.getElementById(DetalleChekBox.id);
-
-            if (isNaN(DetalleCantidad)) {
-                Toast.fire({
-                    icon: 'warning',
-                    title: 'Ingrese una cantidad válida'
-                });
-                checkboxSeleccionado.checked = false;
-                document.getElementById(IdCantidad).focus();
-                return;
-            }
-            if (DetalleCantidad > parseInt(Existencia, 10)) {
+        function ValidarExistencia(input, existencia, idProducto) {
+            if (input > existencia) {
                 Toast.fire({
                     icon: 'error',
                     title: 'La cantidad supera la existencia'
-                })
-                checkboxSeleccionado.checked = false;
-                document.getElementById(IdCantidad).focus();
-                return;
+                });
+                ErrorExistencia = true;
             }
-            document.getElementById(IdCantidad).disabled = true;
+            else {
+                ErrorExistencia = false;
+            }
         }
-        function mostrarIdsSeleccionados() {
 
-            // Obtén todos los elementos con la clase 'checkboxSeleccion'
-            var checkboxes = document.getElementsByClassName('checkboxSeleccion');
-
-            // Crea un array para almacenar los IDs de los checkboxes seleccionados
-            var idsSeleccionados = [];
-
-            // Recorre todos los checkboxes y agrega los IDs al array si están seleccionados
-            for (var i = 0; i < checkboxes.length; i++) {
-                if (checkboxes[i].checked) {
-                    idsSeleccionados.push(checkboxes[i].id);
-                }
-            }
-            if (DetalleCantidad === 0) {
+        function MostrarIdSeleccionados() {
+            if (ErrorExistencia) {
                 Toast.fire({
                     icon: 'error',
-                    title: 'Ingrese cantidad valida'
-                })
-
+                    title: 'Hay una cantidad que supera la existencia'
+                });
                 return;
             }
-            if (idsSeleccionados.length === 0) {
-                Toast.fire({
-                    icon: 'error',
-                    title: 'Ingrese cantidad valida'
-                })
-
-                return;
-            }
-
-
-            $.ajax({
-                url: '@Url.Action("InsertarProducto", "Ventas")',
-                type: 'POST',
-                data: {
-                    IdProductoInsertando: JSON.stringify(idsSeleccionados),
-                    DetalleCantidad
-                },
-                success: function (result) {
-                    if (result.success) {
-                        Toast.fire({
-                            icon: 'success',
-                            title: result.message
-                        })
-                        // Esperar medio segundo antes de recargar la página
-                        setTimeout(function () {
-                            window.location.reload();
-                        }, 500);
-                    }
-                    else {
-
-                    }
-                },
-                error: function (xhr, status, error) {
-                    swal({
-                        title: "Error",
-                        text: "Ocurrió un error al realizar la solicitud.",
-                        type: "error"
-                    });
+            var seleccionados = [];
+            $('.checkboxSeleccion:checked').each(function () {
+                var idProducto = $(this).attr('id');
+                var cantidad = $('#CantidadProducto' + idProducto).val();
+                if (cantidad > 0) {
+                    seleccionados.push({ idProducto: idProducto, cantidad: cantidad });
                 }
             });
-
+            if (seleccionados.length > 0) 
+            {
+                console.log(seleccionados);
+            }
+                
         }
+
+        function ValidarSeleccion(checkbox, existencia) {
+
+            var idProducto = checkbox.id;
+            var cantidadInput = $('#CantidadProducto' + idProducto);
+            
+            if (checkbox.checked) {
+                cantidadInput.prop('disabled', false);
+            } else {
+                cantidadInput.prop('disabled', true);
+                cantidadInput.val('');
+            }
+        }
+
+        $(document).ready(function () {
+            $('[data-toggle="popover"]').popover({
+                html: true,
+                trigger: 'hover'
+            });
+
+            $('.checkboxSeleccion').each(function () {
+                ValidarSeleccion(this, $(this).data('existencia'));
+            });
+        });
     </script>
-
-    <style>
-        /* Estilo para hacer el checkbox más grande */
-        input[type="checkbox"] {
-            transform: scale(1.5); /* Ajusta el valor según sea necesario para hacerlo más grande o más pequeño */
-        }
-    </style>
-}
-
-
+</body>
+</html>

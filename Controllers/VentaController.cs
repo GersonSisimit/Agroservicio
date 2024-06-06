@@ -67,7 +67,7 @@ namespace Agroservicio.Controllers
 
 
         [HttpPost]
-        public IActionResult BuscarProducto(string busqueda, EmpaqueProducto empaque)
+        public IActionResult BuscarProducto(string busqueda)
         {
             var productosDetalles = new List<object>();
 
@@ -85,6 +85,7 @@ namespace Agroservicio.Controllers
                                        select new
                                        {
                                            ProductoPrecio = Producto.Precio,
+                                           RutaImagen = Producto.RutaImagen,
                                            ProductoExistencia = Producto.Existencia,
                                            ProductoId = Producto.Id,
                                            BaseProductoNombre = BaseProducto.Nombre,
@@ -93,11 +94,11 @@ namespace Agroservicio.Controllers
                                            TipoProductoNombre = TipoProducto.Nombre, // Añadiendo este si es necesario
                                            GrupoTipoProductoNombre = GrupoTipoProducto.Nombre // Añadiendo este si es necesario
                                        })
-                                       .FirstOrDefault();
+                                       .ToList();
 
                 if (detalleProducto != null)
                 {
-                    productosDetalles.Add(detalleProducto);
+                    productosDetalles.AddRange(detalleProducto);
                 }
             }
 
