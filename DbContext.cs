@@ -17,6 +17,9 @@ namespace Agroservicio
         public DbSet<Models.BaseProducto> BaseProducto { get; set; }
         public DbSet<Models.EmpaqueProducto> EmpaqueProducto { get; set; }
         public DbSet<Models.Producto> Producto { get; set; }
-
+        public DbSet<Models.Cliente> Cliente { get; set; }
+        public DbSet<Models.DireccionCliente> DireccionCliente { get; set; }
+        public DbSet<Models.Factura> Factura { get; set; }
+        public DbSet<Models.LineaFactura> LineaFactura { get; set; }
     }
 }

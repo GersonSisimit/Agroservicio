@@ -86,12 +86,46 @@
             <div class="col-md-4">
                 <div class="box box-warning animated slideInRight">
                     <div class="box-header with-border">
+                        <h3 class="box-title">
+                            <i class="fa fa-user" aria-hidden="true"></i>
+                            Clientes
+                        </h3>
+                    </div>
+                    <div class="box-body">
+                        <!-- Contenido relacionado con los productos -->
+
+                        <table class="table table-hover">
+                            <tbody>
+                                <tr>
+                                    <td>Crear</td>
+                                    <td class="text-right">
+                                        <a href="@Url.Action("Index", "Cliente")" class="btn btn-default">
+                                            <i class="fa fa-shopping-bag" aria-hidden="true"></i>
+                                        </a>
+                                    </td>
+
+                                </tr>
+                                <tr>
+                                    <td>Direccion Cliente</td>
+                                    <td class="text-right">
+                                        <a href="@Url.Action("DireccionCliente", "Cliente")" class="btn btn-default">
+                                            <i class="fa fa-location-arrow" aria-hidden="true"></i>
+                                        </a>
+                                    </td>
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="box box-warning animated slideInRight">
+                    <div class="box-header with-border">
                         <h3 class="box-title"><i class="fa fa-database"></i> Inventario</h3>
                     </div>
                     <div class="box-body">
-                        <!-- Contenido relacionado con el inventario -->
-                        <!-- Puedes agregar tus propios elementos y diseño aquí -->
-                        <p>Aquí puedes gestionar el inventario de productos.</p>
+                       
                         <a href="#" class="btn btn-primary"><i class="fa fa-list-alt"></i> Ver inventario</a>
                     </div>
                 </div>
