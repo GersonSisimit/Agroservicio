@@ -6,6 +6,19 @@
     var relacionTipoSubtipoProducto = ViewBag.RelacionTipoSubtipoProducto;
     var SubtipoProducto = ViewBag.SubtipoProducto;
     double TotalFinal = 0;
+
+    var ListaCliente = new List<Cliente>();
+    bool MostrarSeleccionCliente = false;
+    if (ViewBag.Clientes != null)
+    {
+        ListaCliente = (List<Cliente>)ViewBag.Clientes;
+        MostrarSeleccionCliente = true;
+    }
+    var Cliente = new Cliente();
+    if (ViewBag.ClienteCarrito != null)
+    {
+        Cliente = (Cliente)ViewBag.ClienteCarrito;
+    }
 }
 
 <div class="content-wrapper">
@@ -21,118 +34,173 @@
             </div>
         </div>
     </div>
-    <section class="content">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="card">
-                        <div class="card-header">
-                            <h5 class="card-title">
-                                <i class="fas fa-cubes"></i> Buscar y agregar productos
-                            </h5>
+    @if (MostrarSeleccionCliente)
+    {
+        <section class="content">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-12">
+
+                        <div class="card">
+                            <div class="card-header">
+                                <h2 class="card-title">Clientes Creados</h2>
+                            </div>
+                            <div class="card-body">
+                                <table id="example1" class="table table-bordered table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Nombre</th>
+                                            <th>Telefono</th>
+                                            <th class="text-center"> Acción</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var item in ListaCliente)
+                                        {
+                                            <tr>
+                                                <td style="width:50%">@item.Nombre</td>
+                                                <td style="width:50%">@item.Telefono</td>
+                                                <td class="text-center">
+                                                    <button class="btn btn-primary" onclick="location.href='@Url.Action("SeleccionarCliente", "Venta", new { id = @item.Id })'"> Seleccionar </button>
+
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-md-8 offset-md-2">
-                                    <div class="input-group">
-                                        <input type="search" id="searchInput" name="busqueda" class="form-control form-control-lg" placeholder="Ingrese su búsqueda" autocomplete="off">
-                                        <div class="input-group-append">
-                                            <button type="button" class="btn btn-lg btn-default" onclick="BuscarProducto()">
-                                                <i class="fa fa-search"></i>
-                                            </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    }
+    else
+    {
+        <section class="content">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="card-title">
+                                    <i class="fas fa-cubes"></i> Buscar y agregar productos
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-8 offset-md-2">
+                                        <div class="input-group">
+                                            <input type="search" id="searchInput" name="busqueda" class="form-control form-control-lg" placeholder="Ingrese su búsqueda" autocomplete="off">
+                                            <div class="input-group-append">
+                                                <button type="button" class="btn btn-lg btn-default" onclick="BuscarProducto()">
+                                                    <i class="fa fa-search"></i>
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="card-footer">
-                            <!-- Additional footer content if needed -->
-                        </div>
-                    </div>
-                </div>
-            </div>
-    </section>
-    <section>
-        <div>
-            <div class="modal fade" id="resultadosBusquedaModal" tabindex="-1" role="dialog" aria-labelledby="resultadosBusquedaModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-lg" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="resultadosBusquedaModalLabel">Agregar Productos</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <!-- Contenedor para los resultados de la búsqueda -->
-                            <div id="modalResultadosBusqueda"></div>
-                        </div>
-                        <div class="modal-footer justify-content-between">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                            <div class="card-footer">
+                                <!-- Additional footer content if needed -->
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
-    </section>
-    <div class="container">
-        <div class="card">
-            <div class="card-header">
-                <h5 class="card-title">
-                    <h2>Productos Agregados</h2>
-                </h5>
-            </div>
-            <div class="card-body">
-                <div class="row">
-                    <table class="table table-bordered table-hover">
-                        @if (Model.Count > 0)
-                        {
-                            <button id="btnVaciarSesion" class="btn btn-danger mb-3">
-                                <i class="fa fa-trash-alt"></i> Vaciar Carrito
-                            </button>
-                        }
-
-                        <thead>
-                            <tr>
-                                <th>Nombre</th>
-                                <th>Tipo de Producto</th>
-                                <th>Subtipo de Producto</th>
-                                <th>Marca</th>
-                                <th>Cantidad</th>
-                                <th>Precio</th>
-                                <th>Subtotal</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var producto in Model)
-                            {
-                                var SubTotal = producto.Precio * producto.Cantidad;
-                                <tr>
-                                    <td>@producto.Nombre</td>
-                                    <td>@producto.TipoProducto</td>
-                                    <td>@producto.GrupoTipoProducto</td>
-                                    <td>@producto.Marca</td>
-                                    <td>@producto.Cantidad</td>
-                                    <td>Q @producto.Precio</td>
-                                    <td>Q @SubTotal</td>
-                                </tr>
-                                TotalFinal += producto.Precio * producto.Cantidad;
-                            }
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            <div class="card-footer">
-                <div class="col-md-12">
-                    @if (TotalFinal != 0)
+        </section>
+        <div class="container">
+            <div class="card">
+                <div class="card-header">
+                    <h1>
+                        <i class="fa fa-user" aria-hidden="true"></i>
+                        @Cliente.Nombre
+                    </h1>
+                    @if (Model.Count == 0)
                     {
-                        <h1>Total Final: @TotalFinal</h1>
-                        <button onclick="GenerarCompra()" class="btn btn-primary">Generar Compra</button>
+                        <button id="btnVaciarSesion" class="btn btn-xs btn-warning mb-3">
+                            <i class="fa fa-trash-alt"></i> Cancelar Venta
+                        </button>
                     }
+                    <h5 class="card-title">
+                        <h3>Productos Agregados</h3>
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <table class="table table-bordered table-hover">
+                            @if (Model.Count > 0)
+                            {
+                                <button id="btnVaciarSesion" class="btn btn-danger mb-3">
+                                    <i class="fa fa-trash-alt"></i> Vaciar Carrito
+                                </button>
+                            }
+
+                            <thead>
+                                <tr>
+                                    <th>Nombre</th>
+                                    <th>Tipo de Producto</th>
+                                    <th>Subtipo de Producto</th>
+                                    <th>Marca</th>
+                                    <th>Cantidad</th>
+                                    <th>Precio</th>
+                                    <th>Subtotal</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var producto in Model)
+                                {
+                                    var SubTotal = producto.Precio * producto.Cantidad;
+                                    <tr>
+                                        <td>@producto.Nombre</td>
+                                        <td>@producto.TipoProducto</td>
+                                        <td>@producto.GrupoTipoProducto</td>
+                                        <td>@producto.Marca</td>
+                                        <td>@producto.Cantidad</td>
+                                        <td>Q @producto.Precio</td>
+                                        <td>Q @SubTotal</td>
+                                    </tr>
+                                    TotalFinal += producto.Precio * producto.Cantidad;
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div class="col-md-12">
+                        @if (TotalFinal != 0)
+                        {
+                            <h1>Total Final: Q. @TotalFinal</h1>
+                            <button class="btn btn-primary" onclick="location.href='@Url.Action("RegistrarVenta", "Venta")'"> Generar Venta </button>
+
+                        }
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+        <section>
+            <div>
+                <div class="modal fade" id="resultadosBusquedaModal" tabindex="-1" role="dialog" aria-labelledby="resultadosBusquedaModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="resultadosBusquedaModalLabel">Agregar Productos</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <!-- Contenedor para los resultados de la búsqueda -->
+                                <div id="modalResultadosBusqueda"></div>
+                            </div>
+                            <div class="modal-footer justify-content-between">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    }
 </div>
 
 @section Scripts {
@@ -144,9 +212,6 @@
             showConfirmButton: false,
             timer: 3000
         });
-        function GenerarCompra() {
-            alert("Vamo a comprar");
-        }
 
         var input = document.getElementById("searchInput");
 
@@ -227,5 +292,26 @@
                 });
             });
         });
+    </script>
+    <script>
+        var creacionExito = '@TempData["CreacionExito"]';
+        var error = '@TempData["Error"]';
+        var mensaje = '@TempData["Mensaje"]';
+
+        if (creacionExito === "Si") {
+            Swal.fire({
+                title: "",
+                text: mensaje,
+                icon: "success"
+            });
+        }
+
+        if (error === "Si") {
+            Swal.fire({
+                title: "Error",
+                text: mensaje,
+                icon: "error"
+            });
+        }
     </script>
 }

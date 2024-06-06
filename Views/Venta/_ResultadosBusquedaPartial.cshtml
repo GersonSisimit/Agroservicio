@@ -43,7 +43,7 @@
                 var IdCantidad = "CantidadProducto" + Item.ProductoId;
 
                 <tr>
-                    <td style="text-align:center">@Item.BaseProductoNombre @Item.EmpaqueNombre @Item.MarcaNombre</td>
+                    <td style="text-align:center">@Item.BaseProductoNombre @Item.EmpaqueNombre Marca:@Item.MarcaNombre</td>
                     <td style="text-align:center">
                         @if (Item.RutaImagen != null)
                         {
@@ -106,7 +106,7 @@
                 }
 
                 if (cantidad > 0) {
-                    DatosSeleccionados.push({ Id: idProducto, Existencia: existencia });
+                    DatosSeleccionados.push({ Id: idProducto, Existencia: cantidad });
                 }
                 else {
                     Toast.fire({

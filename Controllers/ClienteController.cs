@@ -14,12 +14,15 @@ namespace Agroservicio.Controllers
             _contextDB = context;
             _hostEnvironment = hostEnvironment;
         }
+
+
+        #region Cliente
+
         public IActionResult Index()
         {
             ViewBag.Clientes = _contextDB.Cliente.ToList();
             return View();
         }
-
         [HttpPost]
         public IActionResult CrearCliente(Cliente cliente)
         {
@@ -65,6 +68,9 @@ namespace Agroservicio.Controllers
 
             return RedirectToAction("Index", "Cliente");
         }
+        #endregion
+
+        #region Direccion Cliente
 
         public IActionResult DireccionCliente()
         {
@@ -113,7 +119,9 @@ namespace Agroservicio.Controllers
             TempData["CreacionExito"] = "Si";
             TempData["Mensaje"] = "Modificacion Exitosa";
 
-            return RedirectToAction("Index", "Cliente");
+            return RedirectToAction("DireccionCliente");
         }
+        #endregion
+
     }
 }

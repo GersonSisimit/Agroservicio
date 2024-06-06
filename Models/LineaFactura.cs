@@ -16,8 +16,8 @@ namespace Agroservicio.Models
 
         //Relaciones externas
         [ForeignKey("IdFactura")]
-        public virtual required Factura Factura { get; set; }
+        public virtual Factura Factura { get; set; }
         [ForeignKey("IdProducto")]
-        public virtual required Producto Producto { get; set; }
+        public virtual Producto Producto { get; set; }
     }
 }

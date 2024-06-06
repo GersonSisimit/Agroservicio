@@ -15,6 +15,6 @@ namespace Agroservicio.Models
         public int IdDireccionCliente { get; set; }
         //Relaciones externas
         [ForeignKey("IdDireccionCliente")]
-        public virtual required DireccionCliente DireccionCliente { get; set; }
+        public virtual  DireccionCliente DireccionCliente { get; set; }
     }
 }
