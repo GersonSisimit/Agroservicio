@@ -14,7 +14,6 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-
                     <h1 class="m-0">
                         Venta
                         <i class="fa fa-cart-plus" aria-hidden="true"></i>
@@ -28,27 +27,27 @@
             <div class="row">
                 <div class="col-md-12">
                     <div class="card">
-                        <div class="card-header ">
+                        <div class="card-header">
                             <h5 class="card-title">
                                 <i class="fas fa-cubes"></i> Buscar y agregar productos
                             </h5>
-
-                            <div class="card-body">
-                                <div class="container-fluid">
-                                    <div class="row">
-                                        <div class="col-md-8 offset-md-2">
-                                            <div class="input-group">
-                                                <input type="search" id="searchInput" name="busqueda" class="form-control form-control-lg" placeholder="Ingrese su búsqueda">
-                                                <div class="input-group-append">
-                                                    <button type="button" class="btn btn-lg btn-default" onclick="BuscarProducto()">
-                                                        <i class="fa fa-search"></i>
-                                                    </button>
-                                                </div>
-                                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-8 offset-md-2">
+                                    <div class="input-group">
+                                        <input type="search" id="searchInput" name="busqueda" class="form-control form-control-lg" placeholder="Ingrese su búsqueda" autocomplete="off">
+                                        <div class="input-group-append">
+                                            <button type="button" class="btn btn-lg btn-default" onclick="BuscarProducto()">
+                                                <i class="fa fa-search"></i>
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                        <div class="card-footer">
+                            <!-- Additional footer content if needed -->
                         </div>
                     </div>
                 </div>
@@ -69,21 +68,18 @@
                             <!-- Contenedor para los resultados de la búsqueda -->
                             <div id="modalResultadosBusqueda"></div>
                         </div>
-                        <div class="modal-footer">
+                        <div class="modal-footer justify-content-between">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
                         </div>
                     </div>
                 </div>
             </div>
-
         </div>
     </section>
     <div class="container">
         <h2>Productos Agregados</h2>
-
-        <table class="table table-bordered">
-            <button id="btnVaciarSesion" class="btn btn-primary">Vaciar Carrito</button>
-
+        <table class="table table-bordered table-hover">
+            <button id="btnVaciarSesion" class="btn btn-primary mb-3">Vaciar Carrito</button>
             <thead>
                 <tr>
                     <th>Cantidad</th>
@@ -105,17 +101,18 @@
                         <td>@producto.Marca</td>
                         <td>Q @producto.Precio</td>
                     </tr>
-                    TotalFinal += producto.Precio*producto.DatoCantidad;
+                    TotalFinal += producto.Precio * producto.DatoCantidad;
                 }
             </tbody>
-
         </table>
-        <div class="container">
-            @if (TotalFinal != 0)
-            {
-                <h1>Total Final: @TotalFinal</h1>
-                <button onclick="GenerarCompra()" class="btn btn-primary">Generar Compra</button>
-            }
+        <div class="row">
+            <div class="col-md-12">
+                @if (TotalFinal != 0)
+                {
+                    <h1>Total Final: @TotalFinal</h1>
+                    <button onclick="GenerarCompra()" class="btn btn-primary">Generar Compra</button>
+                }
+            </div>
         </div>
     </div>
 </div>
@@ -123,13 +120,9 @@
 @section Scripts {
 
     <script>
-
-        function GenerarCompra()
-        {
+        function GenerarCompra() {
             alert("Vamo a comprar");
-
         }
-
 
         var input = document.getElementById("searchInput");
 
@@ -141,6 +134,7 @@
                 BuscarProducto();
             }
         });
+
         function BuscarProducto() {
             var busqueda = document.getElementById("searchInput").value;
             var Toast = Swal.mixin({
@@ -157,10 +151,9 @@
                 Toast.fire({
                     icon: 'info',
                     title: 'Ingrese una descripción mas larga'
-                })
+                });
                 return;
             }
-
 
             $.ajax({
                 url: '@Url.Action("BuscarProducto", "Venta")',
@@ -183,14 +176,8 @@
                     });
                 }
             });
-
         }
 
-        $(document).ready(function () {
-
-        });
-    </script>
-    <script>
         $(document).ready(function () {
             $('#btnVaciarSesion').click(function () {
                 $.ajax({
@@ -215,6 +202,3 @@
         });
     </script>
 }
-
-
-

@@ -104,5 +104,30 @@ namespace Agroservicio.Controllers
 
             return PartialView("_ResultadosBusquedaPartial", productosDetalles);
         }
+
+        [HttpPost]
+        public IActionResult InsertarProducto(List<Producto> DatosSeleccionados)
+        {
+            try
+            {
+                // Obtener la lista de productos existente de la sesión
+                var sessionProductos = HttpContext.Session.GetString("Productos");
+
+                if (sessionProductos != null)
+                {
+
+                }
+               
+                
+                    
+               
+                return Json(new { Message = "Producto agregado", success = true });
+            }
+            catch (System.Exception Error)
+            {
+                return Json(new { Error = Error.Message, success = false });
+            }
+        }
+
     }
 }

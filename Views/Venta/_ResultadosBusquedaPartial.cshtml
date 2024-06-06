@@ -6,7 +6,7 @@
     <style>
         .checkboxSeleccion {
             width: 15px; /* Ajusta el ancho */
-            height: 15px; /* Ajusta la altura */    
+            height: 15px; /* Ajusta la altura */
             /* Para mejorar la accesibilidad y mantener la calidad visual */
             transform: scale(1.5); /* Ajusta el factor de escala según sea necesario */
             -webkit-transform: scale(1.5); /* Soporte para navegadores webkit */
@@ -16,6 +16,98 @@
             margin: 10px; /* Ajusta el margen según sea necesario */
         }
     </style>
+    <script>
+        var Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000
+        });
+        function MostrarIdSeleccionados() {
+            var DatosSeleccionados = [];
+            var valid = true;
+
+            $('.checkboxSeleccion:checked').each(function () {
+                var idProducto = $(this).attr('id');
+                var cantidad = parseInt($('#CantidadProducto' + idProducto).val());
+                var existencia = parseInt($(this).data('existencia'));
+
+                if (cantidad > existencia) {
+                    Toast.fire({
+                        icon: 'error',
+                        title: 'La cantidad ingresada para el producto con ID ' + idProducto + ' excede la existencia disponible.'
+                    });
+                    valid = false;
+                    return false;
+                }
+
+                if (cantidad > 0) {
+                    DatosSeleccionados.push({ Id: idProducto, Existencia: existencia });
+                }
+                else {
+                    Toast.fire({
+                        icon: 'error',
+                        title: 'Hay  lineas seleccionadas sin indicar cantidad'
+                    });
+
+                    valid = false;
+                    return false; 
+                }
+            });
+            if (valid) {
+                console.log(DatosSeleccionados);
+                $.ajax({
+                    url: '@Url.Action("InsertarProducto", "Venta")',
+                    type: 'POST',
+                    data: {
+                        DatosSeleccionados
+                    },
+                    success: function (result) {
+
+                    },
+                    error: function (xhr, status, error) {
+                        swal({
+                            title: "Error",
+                            text: "Ocurrió un error al realizar la solicitud.",
+                            type: "error"
+                        });
+                    }
+                });
+            }
+            // if (DatosSeleccionados.length === 0) {
+            //     Toast.fire({
+            //         icon: 'error',
+            //         title: 'Las lineas seleccionadas no son validas, validar cantidad'
+            //     });
+            //     return false;
+            // }
+
+            
+           
+        }
+
+        function ValidarSeleccion(checkbox, existencia) {
+            var idProducto = checkbox.id;
+            var cantidadInput = $('#CantidadProducto' + idProducto);
+            if (checkbox.checked) {
+                cantidadInput.prop('disabled', false);
+            } else {
+                cantidadInput.prop('disabled', true);
+                cantidadInput.val('');
+            }
+        }
+
+        $(document).ready(function () {
+            $('[data-toggle="popover"]').popover({
+                html: true,
+                trigger: 'hover'
+            });
+
+            $('.checkboxSeleccion').each(function () {
+                ValidarSeleccion(this, $(this).data('existencia'));
+            });
+        });
+    </script>
 </head>
 <body>
     <div class="modal-header">
@@ -69,7 +161,7 @@
                     else
                     {
                         <td style="text-align:center">
-                            <input type="number" id="@IdCantidad" disabled onchange="ValidarExistencia(this.value,'@Item.ProductoExistencia','@@Item.ProductoId')" />
+                            <input type="number" id="@IdCantidad" disabled />
                         </td>
                         <td style="text-align:center">
                             <input type="checkbox" class="checkboxSeleccion" id="@Item.ProductoId" data-existencia="@Item.ProductoExistencia" onchange="ValidarSeleccion(this, '@Item.ProductoExistencia')">
@@ -79,73 +171,5 @@
             }
         </tbody>
     </table>
-    <script>
-        var ErrorExistencia = false;
-        var Toast = Swal.mixin({
-            toast: true,
-            position: 'top-end',
-            showConfirmButton: false,
-            timer: 3000
-        });
-        function ValidarExistencia(input, existencia, idProducto) {
-            if (input > existencia) {
-                Toast.fire({
-                    icon: 'error',
-                    title: 'La cantidad supera la existencia'
-                });
-                ErrorExistencia = true;
-            }
-            else {
-                ErrorExistencia = false;
-            }
-        }
-
-        function MostrarIdSeleccionados() {
-            if (ErrorExistencia) {
-                Toast.fire({
-                    icon: 'error',
-                    title: 'Hay una cantidad que supera la existencia'
-                });
-                return;
-            }
-            var seleccionados = [];
-            $('.checkboxSeleccion:checked').each(function () {
-                var idProducto = $(this).attr('id');
-                var cantidad = $('#CantidadProducto' + idProducto).val();
-                if (cantidad > 0) {
-                    seleccionados.push({ idProducto: idProducto, cantidad: cantidad });
-                }
-            });
-            if (seleccionados.length > 0) 
-            {
-                console.log(seleccionados);
-            }
-                
-        }
-
-        function ValidarSeleccion(checkbox, existencia) {
-
-            var idProducto = checkbox.id;
-            var cantidadInput = $('#CantidadProducto' + idProducto);
-            
-            if (checkbox.checked) {
-                cantidadInput.prop('disabled', false);
-            } else {
-                cantidadInput.prop('disabled', true);
-                cantidadInput.val('');
-            }
-        }
-
-        $(document).ready(function () {
-            $('[data-toggle="popover"]').popover({
-                html: true,
-                trigger: 'hover'
-            });
-
-            $('.checkboxSeleccion').each(function () {
-                ValidarSeleccion(this, $(this).data('existencia'));
-            });
-        });
-    </script>
 </body>
 </html>
