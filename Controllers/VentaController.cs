@@ -1,6 +1,7 @@
 ﻿using Agroservicio.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Newtonsoft.Json;
 
 namespace Agroservicio.Controllers
@@ -302,5 +303,32 @@ namespace Agroservicio.Controllers
             HttpContext.Session.Remove("IdDireccionCliente");
             HttpContext.Session.Remove("Productos");
         }
+
+        public IActionResult ReporteVentas()
+        {
+            var facturas = _context.Factura
+       .Include(f => f.DireccionCliente)
+       .ToList();
+
+            var lineasFactura = _context.LineaFactura
+                .Include(lf => lf.Producto)
+                    .ThenInclude(p => p.BaseProducto)
+                .ToList();
+
+            var ventasPorCliente = facturas
+                .GroupBy(f => f.IdCliente)
+                .Select(g => new
+                {
+                    IdCliente = g.Key,
+                    TotalVentas = g.Sum(f => f.Total)
+                })
+                .ToList();
+
+            ViewBag.LineasFactura = lineasFactura;
+            ViewBag.VentasPorCliente = ventasPorCliente;
+            return View(facturas);
+        }
+
+
     }
 }

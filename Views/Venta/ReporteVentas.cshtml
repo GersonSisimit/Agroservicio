@@ -1,0 +1,71 @@
+﻿@model IEnumerable<Factura>
+
+@{
+    ViewData["Title"] = "Facturas";
+    var lineasFactura = ViewBag.LineasFactura as IEnumerable<LineaFactura>;
+    var ventasPorCliente = ViewBag.VentasPorCliente;
+}
+
+<div class="container">
+    <h1 class="my-4">Dashboard de Ventas</h1>
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Ventas por Cliente</h5>
+                </div>
+                <div class="card-body">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Cliente</th>
+                                <th>Total Ventas</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var venta in ventasPorCliente)
+                            {
+                                <tr>
+                                    <td>@venta.IdCliente</td>
+                                    <td>@venta.TotalVentas.ToString("C")</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h1 class="my-4">Listado de Facturas</h1>
+    <div class="row">
+        @foreach (var factura in Model)
+        {
+            <div class="col-md-6">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5>Factura #@factura.Id</h5>
+                        <p><strong>Cliente:</strong> @factura.IdCliente</p>
+                        <p><strong>Fecha:</strong> @factura.Fecha.ToString("dd/MM/yyyy")</p>
+                        <p><strong>Total:</strong> @factura.Total.ToString("C")</p>
+                        <p><strong>Dirección:</strong> @factura.DireccionCliente?.Direccion ?? "N/A"</p>
+                    </div>
+                    <div class="card-body">
+                        <h6>Líneas de Factura:</h6>
+                        <ul class="list-group">
+                            @foreach (var linea in lineasFactura.Where(lf => lf.IdFactura == factura.Id))
+                            {
+                                <li class="list-group-item">
+                                    <p><strong>Producto:</strong> @linea.Producto.BaseProducto.Nombre</p>
+                                    <p><strong>Cantidad:</strong> @linea.Cantidad</p>
+                                    <p><strong>Precio:</strong> @linea.Precio.ToString("C")</p>
+                                    <p><strong>Subtotal:</strong> @linea.SubTotal.ToString("C")</p>
+                                </li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
