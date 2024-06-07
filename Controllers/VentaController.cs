@@ -37,13 +37,15 @@ namespace Agroservicio.Controllers
             var IdClienteCarrito = JsonConvert.DeserializeObject<int>(ClienteCarrito);
 
             ViewBag.ClienteCarrito = _context.Cliente.Find(IdClienteCarrito);
+            ViewBag.ListaDireccionCliente = _context.DireccionCliente.Where(x => x.IdCliente == IdClienteCarrito).ToList();
+
             #endregion
 
             #region Validacion Productos Agregados
             // Verificar si existe la sesión con la clave "Productos"
             var sessionProductos = HttpContext.Session.GetString("Productos");
 
-            
+
             if (string.IsNullOrEmpty(sessionProductos))
             {
                 return View(productosDetalles);
@@ -126,6 +128,14 @@ namespace Agroservicio.Controllers
 
             return PartialView("_ResultadosBusquedaPartial", productosDetalles);
         }
+        [HttpPost]
+        public JsonResult SeleccionarDireccion(int IdDireccion)
+        {
+            HttpContext.Session.SetString("IdDireccionCliente", JsonConvert.SerializeObject(IdDireccion));
+
+            return Json(new { success = true, message = "Dirección seleccionada" });
+        }
+
 
         [HttpPost]
         public IActionResult InsertarProducto(List<Producto> DatosSeleccionados)
@@ -154,6 +164,15 @@ namespace Agroservicio.Controllers
         public IActionResult RegistrarVenta()
         {
             //Obtener los datos guardados de las sessiones generadas
+            var IdDireccionCliente = HttpContext.Session.GetString("IdDireccionCliente");
+
+            if (IdDireccionCliente == null)
+            {
+                TempData["Error"] = "Si";
+                TempData["Mensaje"] = "Seleccione una direccion del cliente";
+                return RedirectToAction("Index");
+            }
+            int IdDireccion = JsonConvert.DeserializeObject<int>(IdDireccionCliente);
 
             var sessionProductos = HttpContext.Session.GetString("Productos");
             var ClienteCarrito = HttpContext.Session.GetString("ClienteCarrito");
@@ -201,7 +220,7 @@ namespace Agroservicio.Controllers
                 }
                 RegistroFactura.IdCliente = IdClienteCarrito;
                 RegistroFactura.Fecha = DateTime.Now;
-                RegistroFactura.IdDireccionCliente = 1;
+                RegistroFactura.IdDireccionCliente = IdDireccion;
                
 
                 foreach (var detalles in productosDetalles)
@@ -245,9 +264,7 @@ namespace Agroservicio.Controllers
                 TempData["CreacionExito"] = "Si";
                 TempData["Mensaje"] = "Venta generada exitosamente";
                 // Vaciar la sesión de cliente y carrito
-                HttpContext.Session.Remove("ClienteCarrito");
-                HttpContext.Session.Remove("Productos");
-                
+                EliminarSesionCarrito();
             }
             else
             {
@@ -262,10 +279,7 @@ namespace Agroservicio.Controllers
         {
             try
             {
-                // Vaciar la sesión de cliente y carrito
-                HttpContext.Session.Remove("ClienteCarrito");
-
-                HttpContext.Session.Remove("Productos");
+                EliminarSesionCarrito();
                 return Json(new { success = true, message = "Carrito vaciado" });
             }
             catch (System.Exception Error)
@@ -279,6 +293,14 @@ namespace Agroservicio.Controllers
             var Producto = _context.Producto.Find(IdProducto);
             Producto.Existencia -=CantidadRebaja;
             _context.SaveChanges();
+        }
+
+        public void EliminarSesionCarrito()
+        {
+            // Vaciar la sesión de cliente y carrito
+            HttpContext.Session.Remove("ClienteCarrito");
+            HttpContext.Session.Remove("IdDireccionCliente");
+            HttpContext.Session.Remove("Productos");
         }
     }
 }

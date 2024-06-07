@@ -19,6 +19,12 @@
     {
         Cliente = (Cliente)ViewBag.ClienteCarrito;
     }
+
+    var ListaDireccionCliente = new List<DireccionCliente>();
+    if (ViewBag.ListaDireccionCliente != null)
+    {
+        ListaDireccionCliente = (List<DireccionCliente>)ViewBag.ListaDireccionCliente;
+    }
 }
 
 <div class="content-wrapper">
@@ -114,7 +120,18 @@
                     <h1>
                         <i class="fa fa-user" aria-hidden="true"></i>
                         @Cliente.Nombre
+                        
                     </h1>
+                    <div class="form-group">
+                        <label for="grupo">Direccion a enviar</label>
+                        <select id="IdDireccion" name="IdCliente" required onchange="enviarDireccion()">
+                            <option value="" disabled selected>Seleccione Direccion</option>
+                            @foreach (var Direccion in ListaDireccionCliente)
+                            {
+                                <option value="@Direccion.Id">@Direccion.Direccion</option>
+                            }
+                        </select>
+                    </div>
                     @if (Model.Count == 0)
                     {
                         <button id="btnVaciarSesion" class="btn btn-xs btn-warning mb-3">
@@ -292,6 +309,33 @@
                 });
             });
         });
+
+        function enviarDireccion() {
+            var IdDireccion = document.getElementById("IdDireccion").value;
+
+            if (IdDireccion) {
+                $.ajax({
+                    url: '@Url.Action("SeleccionarDireccion", "Venta")',
+                    type: 'POST',
+                    data: {
+                        IdDireccion
+                    },
+                    success: function (result) {
+                        if (result.success) {
+                            Toast.fire({
+                                icon: 'success',
+                                title: result.message
+                            })
+                        } else {
+                            alert('Error: ' + result.message); // Manejar errores
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        alert('Ocurrió un error al realizar la solicitud.');
+                    }
+                });
+            }
+        }
     </script>
     <script>
         var creacionExito = '@TempData["CreacionExito"]';
@@ -308,7 +352,7 @@
 
         if (error === "Si") {
             Swal.fire({
-                title: "Error",
+                title: "Información",
                 text: mensaje,
                 icon: "error"
             });
