@@ -1,0 +1,73 @@
+﻿<title>Client Sales Dashboard</title>
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<div class="content-wrapper">
+    
+    <section class="content-header">
+
+    </section>
+
+   
+        <div class="row">
+            <div class="container">
+                <h1 class="my-4 text-center">Reporte de ventas por cliente</h1>
+                <div class="row">
+                    <div class="col-md-12">
+                        <canvas id="salesChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <script>
+                document.addEventListener('DOMContentLoaded', function () {
+                    const ctx = document.getElementById('salesChart').getContext('2d');
+                    const data = [
+                    { label: "Cliente 1", data: 1500 },
+                    { label: "Cliente 2", data: 1800 },
+                    { label: "Cliente 3", data: 2100 },
+                    { label: "Cliente 4", data: 2400 },
+                    { label: "Cliente 5", data: 2700 },
+                    { label: "Cliente 6", data: 3000 },
+                    { label: "Cliente 7", data: 1650 },
+                    { label: "Cliente 8", data: 1950 },
+                    { label: "Cliente 9", data: 2250 },
+                    { label: "Cliente 10", data: 2550 }
+                    ];
+
+                    const labels = data.map(item => item.label);
+                    const salesData = data.map(item => item.data);
+                    const backgroundColors = salesData.map(value => value < 1500 ? 'rgba(255, 99, 132, 0.2)' : value < 2250 ? 'rgba(54, 162, 235, 0.2)' : 'rgba(75, 192, 192, 0.2)');
+                    const borderColors = salesData.map(value => value < 1500 ? 'rgba(255, 99, 132, 1)' : value < 2250 ? 'rgba(54, 162, 235, 1)' : 'rgba(75, 192, 192, 1)');
+
+                    const salesChart = new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                            labels: labels,
+                            datasets: [{
+                                label: 'Ventas',
+                                backgroundColor: backgroundColors,
+                                borderColor: borderColors,
+                                borderWidth: 1,
+                                data: salesData
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            scales: {
+                                y: {
+                                    beginAtZero: true,
+                                    max: 3000
+                                }
+                            }
+                        }
+                    });
+                });
+            </script>
+
+        </div>
+ 
+    <!-- /.content -->
+</div>
+
+
+

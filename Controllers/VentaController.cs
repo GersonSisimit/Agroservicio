@@ -329,6 +329,12 @@ namespace Agroservicio.Controllers
             return View(facturas);
         }
 
+        public IActionResult DashboardVenta()
+        {
+
+            return View();
+        }
+
 
     }
 }

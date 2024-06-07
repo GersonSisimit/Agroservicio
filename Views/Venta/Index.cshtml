@@ -46,18 +46,17 @@
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-12">
-
                         <div class="card">
-                            <div class="card-header">
-                                <h2 class="card-title">Clientes Creados</h2>
+                            <div class="card-header bg-primary text-white">
+                                <h2 class="card-title"><i class="fa fa-users"></i> Seleccionar cliente</h2>
                             </div>
                             <div class="card-body">
                                 <table id="example1" class="table table-bordered table-hover">
-                                    <thead>
+                                    <thead class="thead-dark">
                                         <tr>
-                                            <th>Nombre</th>
-                                            <th>Telefono</th>
-                                            <th class="text-center"> Acción</th>
+                                            <th><i class="fa fa-user"></i> Nombre</th>
+                                            <th><i class="fa fa-phone"></i> Teléfono</th>
+                                            <th class="text-center"><i class="fa fa-cogs"></i> Acción</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -67,8 +66,9 @@
                                                 <td style="width:50%">@item.Nombre</td>
                                                 <td style="width:50%">@item.Telefono</td>
                                                 <td class="text-center">
-                                                    <button class="btn btn-primary" onclick="location.href='@Url.Action("SeleccionarCliente", "Venta", new { id = @item.Id })'"> Seleccionar </button>
-
+                                                    <button class="btn btn-success" onclick="location.href='@Url.Action("SeleccionarCliente", "Venta", new { id = @item.Id })'">
+                                                        <i class="fa fa-check"></i> Seleccionar
+                                                    </button>
                                                 </td>
                                             </tr>
                                         }
@@ -80,6 +80,7 @@
                 </div>
             </div>
         </section>
+
     }
     else
     {

@@ -1,46 +1,48 @@
-﻿
-<div class="content-wrapper">
+﻿<div class="content-wrapper">
     <!-- Content Header (Page header) -->
     @if (Context.User.Identity.IsAuthenticated == true)
     {
-        <h1>
-            Bienvenido @Context.User.Identity.Name
-        </h1>
-        <hr />
+        <div class="content-header">
+            <h1>
+                <i class="fa fa-smile"></i> Bienvenido @Context.User.Identity.Name
+            </h1>
+            <hr />
+        </div>
     }
-    <section class="content-header">
-       
-        <h2>
-            @*            <button id="myButton" class="btn btn-primary">Mostrar SweetAlert</button>
-            *@            Punto de Venta e Inventario
-        </h2>
-    </section>
+  
     <!-- Main content -->
     <section class="content">
         <div class="row">
             <div class="col-md-4">
-                <div class="box box-success animated slideInRight">
-                    <div class="box-header with-border">
-                        <h3 class="box-title"><i class="fa fa-shopping-cart"></i> Venta</h3>
-                        
+                <div class="card card-success animated slideInRight">
+                    <div class="card-header">
+                        <h3 class="card-title"><i class="fa fa-shopping-cart"></i> Venta</h3>
                     </div>
-                    <div class="box-body">
+                    <div class="card-body">
                         <!-- Contenido relacionado con las ventas -->
                         <table class="table table-hover">
                             <tbody>
                                 <tr>
                                     <td>Vender</td>
                                     <td class="text-right">
-                                        <a href="@Url.Action("Index", "Venta")" class="btn btn-default">
-                                            <i class="fa fa-shopping-cart"></i>
+                                        <a href="@Url.Action("Index", "Venta")" class="btn btn-success">
+                                            <i class="fa fa-dollar-sign"></i>
                                         </a>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>Reporte Ventas</td>
                                     <td class="text-right">
-                                        <a href="@Url.Action("ReporteVentas", "Venta")" class="btn btn-default">
-                                            <i class="fa fa-shopping-cart"></i>
+                                        <a href="@Url.Action("ReporteVentas", "Venta")" class="btn btn-info">
+                                            <i class="fa fa-file-alt"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Dashboard Ventas</td>
+                                    <td class="text-right">
+                                        <a href="@Url.Action("DashboardVenta", "Venta")" class="btn btn-primary">
+                                            <i class="fa fa-tachometer-alt"></i>
                                         </a>
                                     </td>
                                 </tr>
@@ -51,37 +53,27 @@
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="box box-info animated slideInRight">
-                    <div class="box-header with-border" >
-                        <h3 class="box-title"><i class="fa fa-cubes"></i> Productos</h3>
+                <div class="card card-info animated slideInRight">
+                    <div class="card-header">
+                        <h3 class="card-title"><i class="fa fa-cubes"></i> Productos</h3>
                     </div>
-                    <div class="box-body">
+                    <div class="card-body">
                         <!-- Contenido relacionado con los productos -->
-
                         <table class="table table-hover">
                             <tbody>
-                               @*  <tr>
-                                    <td>Buscar productos</td>
-                                    <td class="text-right">
-                                        <a href="@Url.Action("BuscarProductos", "Productos")" class="btn btn-default">
-                                            <i class="fa fa-shopping-bag" aria-hidden="true"></i>
-                                        </a>
-                                    </td>
-
-                                </tr> *@
                                 <tr>
                                     <td>Crear Producto</td>
                                     <td class="text-right">
-                                        <a href="@Url.Action("BaseProducto", "Producto")" class="btn btn-default">
-                                            <i class="fa fa-plus" aria-hidden="true"></i>
+                                        <a href="@Url.Action("BaseProducto", "Producto")" class="btn btn-success">
+                                            <i class="fa fa-plus"></i>
                                         </a>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>Gestionar Detalles Productos</td>
                                     <td class="text-right">
-                                        <a href="@Url.Action("ControlDetalle", "Producto")" class="btn btn-default">
-                                            <i class="fa fa-cog" aria-hidden="true"></i>
+                                        <a href="@Url.Action("ControlDetalle", "Producto")" class="btn btn-warning">
+                                            <i class="fa fa-cog"></i>
                                         </a>
                                     </td>
                                 </tr>
@@ -92,42 +84,36 @@
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="box box-warning animated slideInRight">
-                    <div class="box-header with-border">
-                        <h3 class="box-title">
-                            <i class="fa fa-user" aria-hidden="true"></i>
-                            Clientes
-                        </h3>
+                <div class="card card-warning animated slideInRight">
+                    <div class="card-header">
+                        <h3 class="card-title"><i class="fa fa-user"></i> Clientes</h3>
                     </div>
-                    <div class="box-body">
-                        <!-- Contenido relacionado con los productos -->
-
+                    <div class="card-body">
+                        <!-- Contenido relacionado con los clientes -->
                         <table class="table table-hover">
                             <tbody>
                                 <tr>
                                     <td>Crear</td>
                                     <td class="text-right">
-                                        <a href="@Url.Action("Index", "Cliente")" class="btn btn-default">
-                                            <i class="fa fa-shopping-bag" aria-hidden="true"></i>
+                                        <a href="@Url.Action("Index", "Cliente")" class="btn btn-success">
+                                            <i class="fa fa-user-plus"></i>
                                         </a>
                                     </td>
-
                                 </tr>
                                 <tr>
                                     <td>Direccion Cliente</td>
                                     <td class="text-right">
-                                        <a href="@Url.Action("DireccionCliente", "Cliente")" class="btn btn-default">
-                                            <i class="fa fa-location-arrow" aria-hidden="true"></i>
+                                        <a href="@Url.Action("DireccionCliente", "Cliente")" class="btn btn-info">
+                                            <i class="fa fa-location-arrow"></i>
                                         </a>
                                     </td>
-
                                 </tr>
+                                <!-- Add other rows here -->
                             </tbody>
                         </table>
                     </div>
                 </div>
             </div>
-            
         </div>
     </section>
     <!-- /.content -->
