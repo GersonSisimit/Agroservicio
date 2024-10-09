@@ -11,15 +11,11 @@
 }
 
 <div class="login-box">
-    @*  <div class="login-logo">
-    <span>Agroservicio</span>
-    </div> *@
-    <!-- /.login-logo -->
     <div class="card">
         <div class="card-body login-card-body">
             <p class="login-box-msg">Inicia sesión para comenzar</p>
 
-            <form action="Login" method="post">
+            <form action="Login" method="post" id="loginForm">
                 <div class="input-group mb-3">
                     <input type="text" class="form-control" name="Nombre" placeholder="Usuario" required>
                     <div class="input-group-append">
@@ -36,20 +32,22 @@
                         </div>
                     </div>
                 </div>
-                <div class="row">
+
+                <div class="g-recaptcha" data-sitekey="6LffBl0qAAAAAOci20YZ_xuhxictnVRRqzxIgYbF"></div>
+
+                <div class="row mt-3">
                     <button type="submit" class="btn btn-primary btn-block">Login</button>
                 </div>
             </form>
         </div>
-        <!-- /.login-card-body -->
     </div>
 </div>
+
 @section Scripts {
-
-
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
     <script>
-        var Resultado = '@ResultadoLogin'; // Agregar comillas simples alrededor de @ResultadoLogin
-        var Mensaje = '@MensajeResultado'; // Agregar comillas simples alrededor de @MensajeResultado
+        var Resultado = '@ResultadoLogin';
+        var Mensaje = '@MensajeResultado';
 
         var Toast = Swal.mixin({
             toast: true,
@@ -58,12 +56,11 @@
             timer: 3000
         });
 
-        if (Resultado === "Error") { // Comprobación estricta de igualdad con '==='
+        if (Resultado === "Error") {
             Toast.fire({
                 icon: 'error',
                 title: Mensaje
-            })
+            });
         }
     </script>
-
 }
