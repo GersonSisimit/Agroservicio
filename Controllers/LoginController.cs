@@ -10,6 +10,7 @@ using Newtonsoft;
 using Agroservicio.Migrations;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 
 namespace Agroservicio.Controllers
@@ -75,6 +76,12 @@ namespace Agroservicio.Controllers
 
                 if (Usuario != null)
                 {
+                    if (!Usuario.Activo)
+                    {
+                        TempData["Resultado"] = "Error";
+                        TempData["Mensaje"] = "Su usuario esta inactivo, contacte a su administrador";
+                        return RedirectToAction("Index", "Home");
+                    }
                     var claims = new List<Claim>
                     {
                         new Claim(ClaimTypes.Name, value.Nombre),
